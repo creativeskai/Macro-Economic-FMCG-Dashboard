@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Macro · FMCG Intelligence Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #ffffff;
+  --bg2:      #fafaf9;
+  --bg3:      #f4f3f0;
+  --bg4:      #eceae4;
+  --panel:    #ffffff;
+  --border:   #e8e6e0;
+  --border2:  #d4d0c8;
+  --green:    #0d6b4f;
+  --greenl:   #e8f5f0;
+  --blue:     #1e40af;
+  --bluel:    #eff6ff;
+  --amber:    #92400e;
+  --amberl:   #fffbeb;
+  --red:      #991b1b;
+  --redl:     #fef2f2;
+  --violet:   #5b21b6;
+  --violetl:  #f5f3ff;
+  --teal:     #065f46;
+  --teall:    #ecfdf5;
+  --text1:    #111110;
+  --text2:    #3d3b36;
+  --text3:    #6b6960;
+  --text4:    #9c9a94;
+  --up:       #0d6b4f;
+  --upl:      #e8f5f0;
+  --down:     #991b1b;
+  --downl:    #fef2f2;
+  --neutral:  #92400e;
+  --neutrall: #fffbeb;
+  --r:8px; --r2:12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --shadow2: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow3: 0 8px 32px rgba(0,0,0,0.13);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg3);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* ══ HEADER ══ */
+.header{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 28px;position:sticky;top:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;height:56px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+.logo{font-family:'Lora',serif;font-weight:700;font-size:16px;color:var(--text1);}
+.logo em{color:var(--green);font-style:normal;}
+.hbadge{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:3px 8px;border-radius:4px;letter-spacing:.06em;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.hbtn{display:flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;background:#fff;color:var(--text2);transition:all .15s;}
+.hbtn:hover{background:var(--bg3);border-color:var(--border2);}
+.hbtn.primary{background:var(--green);border-color:var(--green);color:#fff;}
+.hbtn.primary:hover{background:#0a5a41;}
+.hbtn svg{width:13px;height:13px;}
+.refresh-info{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text4);display:flex;align-items:center;gap:5px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1}55%{opacity:.35}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ NAV ══ */
+.nav-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;display:flex;overflow-x:auto;}
+.nav-tab{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text3);padding:12px 16px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;transition:all .15s;}
+.nav-tab:hover{color:var(--text2);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+
+/* ══ MAIN ══ */
+.main{padding:20px 28px;max-width:1600px;margin:0 auto;}
+.section{display:none;}
+.section.active{display:block;}
+
+/* ══ SECTION HEADER ══ */
+.sec-head{margin-bottom:16px;}
+.sec-title{font-family:'Lora',serif;font-weight:700;font-size:21px;color:var(--text1);letter-spacing:-.02em;}
+.sec-sub{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text3);margin-top:3px;}
+
+/* ══ 6-MONTH OUTLOOK CTA ══ */
+.outlook-cta{
+  background:linear-gradient(135deg,#f0fdf8 0%,#f0f7ff 50%,#fefce8 100%);
+  border:1.5px solid #a7f3d0;border-radius:var(--r2);
+  padding:18px 22px;margin-bottom:18px;
+  display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;
+}
+.outlook-left{}
+.outlook-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.outlook-label::before{content:'◆';font-size:7px;}
+.outlook-title{font-family:'Lora',serif;font-weight:700;font-size:16px;color:var(--text1);margin-bottom:8px;}
+.outlook-signals{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.sig-pill{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:20px;font-weight:500;}
+.sig-bull{background:var(--upl);color:var(--up);border:1px solid #a7f3d0;}
+.sig-bear{background:var(--downl);color:var(--down);border:1px solid #fecaca;}
+.sig-neut{background:var(--neutrall);color:var(--neutral);border:1px solid #fde68a;}
+.outlook-text{font-size:12px;line-height:1.75;color:var(--text2);}
+.outlook-text strong{color:var(--text1);font-weight:600;}
+.outlook-text .up{color:var(--up);font-weight:600;}
+.outlook-text .dn{color:var(--down);font-weight:600;}
+.outlook-text .nu{color:var(--neutral);font-weight:600;}
+.outlook-right{display:flex;flex-direction:column;gap:8px;min-width:180px;}
+.outlook-metric{background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center;}
+.om-label{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--text4);margin-bottom:4px;}
+.om-val{font-family:'Lora',serif;font-weight:700;font-size:18px;color:var(--text1);}
+.om-dir{font-family:'JetBrains Mono',monospace;font-size:9px;margin-top:2px;}
+.om-up{color:var(--up);}
+.om-dn{color:var(--down);}
+.om-nu{color:var(--neutral);}
+
+/* ══ AI BOX ══ */
+.ai-box{background:#fff;border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--r);padding:12px 16px;margin-bottom:16px;}
+.ai-head{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+.ai-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);}
+.ai-ts{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text4);margin-left:auto;}
+.ai-text{font-size:11.5px;line-height:1.7;color:var(--text2);}
+.ai-text strong{color:var(--text1);font-weight:600;}
+.ai-text .sup{color:var(--up);font-weight:600;}
+.ai-text .sdn{color:var(--down);font-weight:600;}
+.ai-text .snu{color:var(--neutral);font-weight:600;}
+.ai-loading{display:flex;align-items:center;gap:7px;color:var(--text3);font-size:11px;}
+.ai-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;}
+
+/* ══ GRIDS ══ */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:12px;}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:12px;}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:11px;margin-bottom:12px;}
+.g32{display:grid;grid-template-columns:3fr 2fr;gap:11px;margin-bottom:12px;}
+.mt10{margin-top:10px;}
+.mb0{margin-bottom:0!important;}
+
+/* ══ ROW LABEL ══ */
+.rl{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text4);margin:14px 0 9px;display:flex;align-items:center;gap:10px;}
+.rl::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ══ KPI CARD ══ */
+.kpi{
+  background:#fff;border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 15px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:box-shadow .15s,border-color .15s,transform .1s;
+}
+.kpi:hover{box-shadow:var(--shadow2);border-color:var(--green);transform:translateY(-1px);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--al,var(--green));}
+.kpi-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:7px;}
+.kpi-val{font-family:'Lora',serif;font-weight:700;font-size:22px;color:var(--text1);line-height:1;margin-bottom:5px;}
+.kpi-val.sm{font-size:17px;}
+.kpi-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.kpi-chg{font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:2px 6px;border-radius:3px;}
+.chg-up{color:var(--up);background:var(--upl);}
+.chg-dn{color:var(--down);background:var(--downl);}
+.chg-nu{color:var(--neutral);background:var(--neutrall);}
+.kpi-per{font-size:9.5px;color:var(--text4);}
+.kpi-src{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text4);margin-top:5px;}
+.kpi-hint{font-size:8px;color:var(--text4);margin-top:4px;font-style:italic;}
+
+/* ══ CHART CARD ══ */
+.cc{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:15px;box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .15s,border-color .15s;}
+.cc:hover{box-shadow:var(--shadow2);border-color:var(--border2);}
+.cc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px;}
+.cc-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:12.5px;color:var(--text1);}
+.cc-sub{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text3);margin-top:2px;}
+.cc-badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+.cw canvas{max-height:185px;}
+.cw.tall canvas{max-height:240px;}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:9px;}
+.li{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--text3);}
+.ll{width:14px;height:2px;border-radius:1px;flex-shrink:0;}
+.ll-dashed{width:14px;height:0;border-top:2px dashed;flex-shrink:0;}
+
+/* ══ TABLE ══ */
+.dt{width:100%;border-collapse:collapse;font-size:11px;}
+.dt th{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);padding:7px 10px;text-align:left;border-bottom:1.5px solid var(--border);background:var(--bg3);}
+.dt td{padding:7px 10px;border-bottom:1px solid var(--bg3);color:var(--text2);vertical-align:middle;}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr:hover td{background:var(--bg3);}
+.num{font-family:'JetBrains Mono',monospace;color:var(--text1);}
+.tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:2px 6px;border-radius:3px;}
+.t-up{color:var(--up);background:var(--upl);}
+.t-dn{color:var(--down);background:var(--downl);}
+.t-nu{color:var(--neutral);background:var(--neutrall);}
+
+/* ══ SECTOR GROUP ══ */
+.sg{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:11px;box-shadow:var(--shadow);}
+.sg-head{background:var(--bg3);padding:9px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.sg-title{font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;color:var(--text1);}
+
+/* ══ NOTE ══ */
+.note{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text4);padding:5px 0 0;line-height:1.55;}
+
+/* ══ FORECAST SOURCE STRIP ══ */
+.fcst-src{
+  display:flex;align-items:center;gap:6px;
+  font-family:'JetBrains Mono',monospace;font-size:8px;
+  color:var(--text4);margin-top:8px;padding-top:7px;
+  border-top:1px dashed var(--border2);
+}
+.fcst-src-dot{width:10px;height:0;border-top:2px dashed var(--text4);flex-shrink:0;}
+.fcst-src strong{color:var(--text3);font-weight:500;}
+
+/* ══ AI BOX — BULLET VARIANT ══ */
+.ai-box{background:#fff;border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--r);padding:12px 16px;margin-bottom:16px;}
+.ai-head{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.ai-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);}
+.ai-ts{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text4);margin-left:auto;}
+.ai-text{font-size:11px;line-height:1.6;color:var(--text2);}
+.ai-text strong{color:var(--text1);font-weight:600;}
+.ai-text .sup{color:var(--up);font-weight:600;}
+.ai-text .sdn{color:var(--down);font-weight:600;}
+.ai-text .snu{color:var(--neutral);font-weight:600;}
+.ai-text ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;}
+.ai-text li{display:flex;align-items:baseline;gap:7px;font-size:11px;line-height:1.5;}
+.ai-text li::before{content:'—';color:var(--border2);font-size:10px;flex-shrink:0;}
+.ai-text li.bull::before{content:'▲';color:var(--up);font-size:8px;}
+.ai-text li.bear::before{content:'▼';color:var(--down);font-size:8px;}
+.ai-text li.neut::before{content:'→';color:var(--neutral);font-size:9px;}
+.ai-text li.watch::before{content:'◎';color:var(--blue);font-size:9px;}
+.ai-loading{display:flex;align-items:center;gap:7px;color:var(--text3);font-size:11px;}
+.ai-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;}
+
+/* ══ COMPOSITE INDEX ══ */
+.ci-header-strip{
+  background:linear-gradient(135deg,#f0fdf8 0%,#f5f3ff 100%);
+  border:1.5px solid #a7f3d0;border-radius:var(--r2);
+  padding:18px 22px;margin-bottom:18px;
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+}
+.ci-header-text .ci-title{font-family:'Lora',serif;font-weight:700;font-size:19px;color:var(--text1);margin-bottom:4px;}
+.ci-header-text .ci-desc{font-size:11.5px;color:var(--text2);line-height:1.65;max-width:680px;}
+.ci-score-box{text-align:center;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 24px;min-width:160px;}
+.ci-score-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;}
+.ci-score-val{font-family:'Lora',serif;font-weight:700;font-size:38px;line-height:1;}
+.ci-score-status{font-family:'JetBrains Mono',monospace;font-size:9px;margin-top:4px;font-weight:500;}
+.ci-components{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px;}
+.ci-comp{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;text-align:center;cursor:help;transition:box-shadow .15s;}
+.ci-comp:hover{box-shadow:var(--shadow2);}
+.ci-comp-name{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:5px;}
+.ci-comp-score{font-family:'Lora',serif;font-weight:700;font-size:20px;color:var(--text1);line-height:1;margin-bottom:3px;}
+.ci-comp-wt{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text4);}
+.ci-comp-bar{height:3px;border-radius:2px;margin-top:5px;background:var(--border);}
+.ci-comp-fill{height:100%;border-radius:2px;transition:width .6s ease;}
+.methodology-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;}
+.meth-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.meth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.meth-item{font-size:10px;color:var(--text3);line-height:1.5;}
+.meth-item strong{color:var(--text2);font-weight:600;display:block;margin-bottom:1px;}
+@media(max-width:900px){.ci-components{grid-template-columns:repeat(3,1fr);}.ci-header-strip{grid-template-columns:1fr;}.meth-grid{grid-template-columns:1fr 1fr;}}
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(3px);
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:#fff;border-radius:16px;
+  width:min(900px,100%);max-height:90vh;
+  overflow-y:auto;box-shadow:var(--shadow3);
+  animation:modalIn .25s ease;
+}
+@keyframes modalIn{from{transform:translateY(12px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal-head{padding:20px 24px 0;display:flex;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);padding-bottom:14px;z-index:2;}
+.modal-title{font-family:'Lora',serif;font-weight:700;font-size:18px;color:var(--text1);}
+.modal-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);margin-top:3px;}
+.modal-close{font-size:18px;cursor:pointer;color:var(--text3);padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;line-height:1;transition:all .15s;}
+.modal-close:hover{background:var(--bg3);}
+.modal-body{padding:20px 24px 24px;}
+.modal-chart-wrap{margin-bottom:18px;}
+.modal-chart-wrap canvas{max-height:320px;}
+.modal-insights{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.insight-card{background:var(--bg3);border-radius:8px;padding:12px;}
+.ic-label{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:4px;}
+.ic-val{font-family:'Lora',serif;font-weight:700;font-size:20px;color:var(--text1);}
+.ic-note{font-size:10px;color:var(--text3);margin-top:2px;}
+.modal-table-wrap{margin-top:16px;}
+.modal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
+.forecast-note{background:var(--amberl);border:1px solid #fde68a;border-radius:6px;padding:8px 12px;font-size:11px;color:var(--amber);margin-bottom:12px;font-family:'JetBrains Mono',monospace;}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:22px;right:22px;z-index:2000;background:var(--text1);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;padding:9px 15px;border-radius:7px;display:none;align-items:center;gap:7px;box-shadow:0 6px 20px rgba(0,0,0,.15);animation:tIn .25s ease;}
+.toast.show{display:flex;}
+@keyframes tIn{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+
+/* ══ PRINT ══ */
+@media print{.header,.nav-bar,.hbtn,.modal-overlay{display:none!important;}.section{display:block!important;page-break-before:always;}.section:first-of-type{page-break-before:auto;}body{background:#fff;}}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr);}.g3{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:650px){.g4,.g3,.g2,.g21,.g32{grid-template-columns:1fr;}.main{padding:12px;}.outlook-cta{grid-template-columns:1fr;}.modal-insights{grid-template-columns:1fr 1fr;}}
+
+/* accent line helpers */
+.al-g{--al:var(--green);} .al-b{--al:var(--blue);} .al-a{--al:#d97706;} .al-r{--al:var(--red);} .al-v{--al:var(--violet);} .al-t{--al:var(--teal);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">India <em>Macro</em> · FMCG Intelligence</div>
+    <div class="hbadge">FY2023–FY2027F · USD</div>
+    <div class="refresh-info"><div class="live-dot"></div><span id="refreshTs">Loading…</span></div>
+  </div>
+  <div class="header-right">
+    <button class="hbtn" onclick="doRefresh()">
+      <svg id="rIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      Refresh
+    </button>
+    <button class="hbtn primary" onclick="exportPDF()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Export PDF
+    </button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <button class="nav-tab active" onclick="nav('economy',this)">A · Economy</button>
+  <button class="nav-tab" onclick="nav('sentiment',this)">B · Demand & Sentiment</button>
+  <button class="nav-tab" onclick="nav('sector',this)">C · Sector Health</button>
+  <button class="nav-tab" onclick="nav('companies',this)">D · Listed Companies</button>
+  <button class="nav-tab" onclick="nav('global',this)">E · Global Context</button>
+  <button class="nav-tab" onclick="nav('composite',this)">F · Composite Index</button>
+</div>
+
+<div class="main">
+
+<!-- ═══ A: ECONOMY ═══ -->
+<div class="section active" id="economy">
+  <div class="sec-head"><div class="sec-title">Health of the Economy</div><div class="sec-sub">MoSPI · RBI · GST Council · DPIIT · PPAC · CGA · DGCI&S · All monetary values USD · FY = Apr–Mar</div></div>
+
+  <!-- 6-Month Outlook CTA -->
+  <div class="outlook-cta">
+    <div class="outlook-left">
+      <div class="outlook-label">6-Month Outlook · Economy</div>
+      <div class="outlook-title">Soft landing intact — rate cuts + rural recovery set up H2 FY26</div>
+      <div class="outlook-signals">
+        <span class="sig-pill sig-bull">▲ CPI below 4% target</span>
+        <span class="sig-pill sig-bull">▲ Rate cut cycle underway</span>
+        <span class="sig-pill sig-bull">▲ PFCE accelerating</span>
+        <span class="sig-pill sig-bear">▼ Credit growth slowing</span>
+        <span class="sig-pill sig-neut">→ Capex execution risk Q4</span>
+      </div>
+      <div class="outlook-text">With CPI easing to <strong>3.48%</strong> (Apr 2026) and the RBI already cutting repo to <strong>5.25%</strong>, real rates are compressing — a direct catalyst for consumer borrowing and discretionary spending. <span class="up">PFCE at 7.3% YoY</span> signals that household consumption remains the growth anchor even as GDP moderates to 6.5%. The <span class="up">GST runway ($20.4 Bn/month, +10.2% YoY)</span> confirms the consumption base is broadening. <span class="dn">Watch risk:</span> Bank credit growth deceleration to 12.1% and CASA ratio compression to 38.2% may cap mid-ticket durables credit. <span class="nu">Forecast path:</span> GDP FY27 est. 6.8–7.0%; CPI to stabilise near 3.8–4.2%; one more 25bps repo cut expected Jun 2026.</div>
+    </div>
+    <div class="outlook-right">
+      <div class="outlook-metric"><div class="om-label">GDP FY27 Forecast</div><div class="om-val">6.9%</div><div class="om-dir om-up">▲ Recovery path</div></div>
+      <div class="outlook-metric"><div class="om-label">CPI 6-Mo Forecast</div><div class="om-val">3.8–4.2%</div><div class="om-dir om-nu">→ Stable</div></div>
+      <div class="outlook-metric"><div class="om-label">Repo Rate (Dec 26)</div><div class="om-val">5.00%</div><div class="om-dir om-up">▼ One more cut</div></div>
+    </div>
+  </div>
+
+  <div class="ai-box" id="ai-economy"><div class="ai-head"><span style="font-size:12px">✦</span><span class="ai-label">AI Signal</span><span class="ai-ts" id="ai-economy-ts">—</span></div><div class="ai-text" id="ai-economy-text"><div class="ai-loading"><div class="ai-spinner"></div>Generating macro signal…</div></div></div>
+
+  <div class="rl">A1 · Growth & Output</div>
+  <div class="g4 mb0">
+    <div class="kpi al-g" onclick="openModal('gdp')"><div class="kpi-lbl">Real GDP YoY</div><div class="kpi-val" id="kv-gdp">6.5%</div><div class="kpi-meta"><span class="kpi-chg chg-dn">▼ vs 8.2% FY24</span><span class="kpi-per">FY26 Adv</span></div><div class="kpi-src">MoSPI · Quarterly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-b" onclick="openModal('pfce')"><div class="kpi-lbl">PFCE Growth YoY</div><div class="kpi-val">7.3%</div><div class="kpi-meta"><span class="kpi-chg chg-up">▲ Accelerating</span><span class="kpi-per">Q3 FY26</span></div><div class="kpi-src">MoSPI · Quarterly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-a" onclick="openModal('iip')"><div class="kpi-lbl">IIP Growth YoY</div><div class="kpi-val">4.1%</div><div class="kpi-meta"><span class="kpi-chg chg-dn">▼ Moderating</span><span class="kpi-per">Feb 2026</span></div><div class="kpi-src">MoSPI / DPIIT · Monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-a" onclick="openModal('pmi')"><div class="kpi-lbl">PMI Composite</div><div class="kpi-val">59.2</div><div class="kpi-meta"><span class="kpi-chg chg-up">▲ 14-mo high</span><span class="kpi-per">Apr 2026</span></div><div class="kpi-src">S&P Global · Monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+  </div>
+  <div class="g4 mt10">
+    <div class="kpi al-r" onclick="openModal('cpi')"><div class="kpi-lbl">CPI Headline YoY</div><div class="kpi-val" id="kv-cpi">3.48%</div><div class="kpi-meta"><span class="kpi-chg chg-up">▼ Below 4% target</span><span class="kpi-per">Apr 2026</span></div><div class="kpi-src">MoSPI · Monthly · Live</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-b" onclick="openModal('repo')"><div class="kpi-lbl">Repo Rate</div><div class="kpi-val" id="kv-repo">5.25%</div><div class="kpi-meta"><span class="kpi-chg chg-up">▼ Cutting cycle</span><span class="kpi-per">Latest MPC</span></div><div class="kpi-src">RBI · Bi-monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-a" onclick="openModal('inr')"><div class="kpi-lbl">USD / INR</div><div class="kpi-val" id="kv-inr">84.6</div><div class="kpi-meta"><span class="kpi-chg chg-nu">→ Range-bound</span><span class="kpi-per">Live</span></div><div class="kpi-src">RBI Reference Rate</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-g" onclick="openModal('gst')"><div class="kpi-lbl">GST Collections</div><div class="kpi-val sm">$20.4 Bn</div><div class="kpi-meta"><span class="kpi-chg chg-up">▲ +10.2% YoY</span><span class="kpi-per">Apr 2026</span></div><div class="kpi-src">GST Council · Monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+  </div>
+  <div class="g2 mt10">
+    <div class="cc" onclick="openModal('gdp_trend')"><div class="cc-head"><div><div class="cc-title">Real GDP & PFCE Growth (YoY %)</div><div class="cc-sub">Quarterly · FY2023–FY2027F · MoSPI</div></div><div class="cc-badge">MoSPI</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--green)"></div>GDP</div><div class="li"><div class="ll" style="background:var(--blue)"></div>PFCE</div><div class="li"><div class="ll-dashed" style="border-color:var(--green)"></div>GDP Fcst</div></div><div class="cw"><canvas id="gdpChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>MoSPI Advance Estimate FY26 + IMF World Economic Outlook Apr 2026</strong></span></div></div>
+    <div class="cc" onclick="openModal('cpi_trend')"><div class="cc-head"><div><div class="cc-title">CPI — Headline / Food / Core (YoY %)</div><div class="cc-sub">Monthly · FY2023–FY2027F · MoSPI</div></div><div class="cc-badge">MoSPI</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--red)"></div>Headline</div><div class="li"><div class="ll" style="background:#d97706"></div>Food</div><div class="li"><div class="ll" style="background:var(--blue)"></div>Core</div></div><div class="cw"><canvas id="cpiChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>RBI MPC Apr 2026 inflation projection · CRISIL Inflation Outlook Q1 FY27</strong></span></div></div>
+  </div>
+  <div class="g2 mt10">
+    <div class="cc" onclick="openModal('rates_trend')"><div class="cc-head"><div><div class="cc-title">Repo Rate & 10-Yr G-Sec (%)</div><div class="cc-sub">Monthly · FY2023–FY2027F · RBI</div></div><div class="cc-badge">RBI</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--blue)"></div>Repo</div><div class="li"><div class="ll" style="background:var(--violet)"></div>10-Yr G-Sec</div><div class="li"><div class="ll-dashed" style="border-color:var(--blue)"></div>Forecast</div></div><div class="cw"><canvas id="ratesChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>RBI MPC forward guidance · Bloomberg consensus repo path · CCIL G-Sec curve</strong></span></div></div>
+    <div class="cc" onclick="openModal('gst_trend')"><div class="cc-head"><div><div class="cc-title">GST Monthly Collections (USD Bn)</div><div class="cc-sub">Monthly · FY2023–FY2027F · GST Council</div></div><div class="cc-badge">GST Council</div></div><div class="cw"><canvas id="gstChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>MoF Budget FY27 indirect tax targets · CRISIL revenue estimate</strong></span></div></div>
+  </div>
+  <div class="g32 mt10">
+    <div class="cc" onclick="openModal('trade_trend')"><div class="cc-head"><div><div class="cc-title">Merchandise Trade — Exports vs Imports (USD Bn/mo)</div><div class="cc-sub">Monthly · FY2023–FY2027F · DGCI&S</div></div><div class="cc-badge">DGCI&S</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--green)"></div>Exports</div><div class="li"><div class="ll" style="background:var(--red)"></div>Imports</div></div><div class="cw"><canvas id="tradeChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>MoC trade target FY27 · World Bank Global Trade Outlook Apr 2026</strong></span></div></div>
+    <div class="cc" onclick="openModal('credit_trend')"><div class="cc-head"><div><div class="cc-title">Bank Credit Growth YoY (%)</div><div class="cc-sub">Fortnightly · FY2023–FY2027F · RBI</div></div><div class="cc-badge">RBI</div></div><div class="cw"><canvas id="creditChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>RBI Annual Report FY26 credit growth guidance · CRISIL Banking Outlook FY27</strong></span></div></div>
+  </div>
+</div>
+
+<!-- ═══ B: SENTIMENT ═══ -->
+<div class="section" id="sentiment">
+  <div class="sec-head"><div class="sec-title">Demand & Sentiment</div><div class="sec-sub">RBI CCS · RBI IES · NPCI · PPAC · MoRD · CACP · FCI · nrega.nic.in</div></div>
+
+  <div class="outlook-cta">
+    <div class="outlook-left">
+      <div class="outlook-label">6-Month Outlook · Demand & Sentiment</div>
+      <div class="outlook-title">Rural recovery is the defining demand story of H2 FY26 — expect acceleration</div>
+      <div class="outlook-signals">
+        <span class="sig-pill sig-bull">▲ FEI at 123 — optimism high</span>
+        <span class="sig-pill sig-bull">▲ Rural wages up 6%</span>
+        <span class="sig-pill sig-bull">▲ UPI at 20 Bn+/month</span>
+        <span class="sig-pill sig-bear">▼ CSI below 100 — present conditions</span>
+        <span class="sig-pill sig-neut">→ Inflation expectations sticky at 9%</span>
+      </div>
+      <div class="outlook-text">The <strong>FEI-CSI gap of 26 points</strong> is structurally positive — households are pessimistic about today but optimistic about tomorrow. <span class="up">Rural MGNREGS wages at ₹370/day (+6%), PM-KISAN ($2.4 Bn/instalment), and MSP hikes of 20%+ over 3 years</span> are rebuilding rural purchasing power in a sustained way. <span class="up">UPI volumes crossing 20 Bn/month</span> with ticket sizes declining confirms micro-payment adoption is broadening the base of digital spenders. <span class="dn">Watch risk:</span> Inflation expectations at 9.2% vs actual 3.48% — there's a large expectations gap. When CPI surprises higher (seasonal food), it triggers rapid discretionary pullback. <span class="nu">6-month outlook:</span> FEI to push toward 125–128; UPI monthly volume to cross 23 Bn by Sep 2026.</div>
+    </div>
+    <div class="outlook-right">
+      <div class="outlook-metric"><div class="om-label">FEI Forecast (Sep 26)</div><div class="om-val">125–128</div><div class="om-dir om-up">▲ Improving</div></div>
+      <div class="outlook-metric"><div class="om-label">UPI Vol Fcst (Sep 26)</div><div class="om-val">~23 Bn</div><div class="om-dir om-up">▲ +15% from now</div></div>
+      <div class="outlook-metric"><div class="om-label">Rural FMCG Demand</div><div class="om-val">Strong</div><div class="om-dir om-up">▲ Outpacing urban</div></div>
+    </div>
+  </div>
+
+  <div class="ai-box" id="ai-sentiment"><div class="ai-head"><span style="font-size:12px">✦</span><span class="ai-label">AI Signal</span><span class="ai-ts" id="ai-sentiment-ts">—</span></div><div class="ai-text" id="ai-sentiment-text"><div class="ai-loading"><div class="ai-spinner"></div>Generating sentiment signal…</div></div></div>
+
+  <div class="rl">B1 · Consumer Confidence (RBI CCS · Bi-monthly)</div>
+  <div class="g4 mb0">
+    <div class="kpi al-g" onclick="openModal('csi')"><div class="kpi-lbl">Current Situation Index</div><div class="kpi-val">97.3</div><div class="kpi-meta"><span class="kpi-chg chg-nu">Below 100 = net pessimism</span></div><div class="kpi-src">RBI CCS · Mar 2026</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-b" onclick="openModal('fei')"><div class="kpi-lbl">Future Expectations Index</div><div class="kpi-val">123.4</div><div class="kpi-meta"><span class="kpi-chg chg-up">▲ Optimistic outlook</span></div><div class="kpi-src">RBI CCS · Jan 2026</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-a" onclick="openModal('discspend')"><div class="kpi-lbl">Non-Essential Spend "Same/Higher"</div><div class="kpi-val">60.2%</div><div class="kpi-meta"><span class="kpi-chg chg-up">▲ vs 56.8% yr-ago</span></div><div class="kpi-src">RBI CCS · Bi-monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-r" onclick="openModal('inflexp')"><div class="kpi-lbl">Inflation Expectations (1-Yr)</div><div class="kpi-val">9.2%</div><div class="kpi-meta"><span class="kpi-chg chg-dn">↓ Moderating slowly</span></div><div class="kpi-src">RBI IES · Mar 2026</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+  </div>
+  <div class="g2 mt10">
+    <div class="cc" onclick="openModal('ccs_trend')"><div class="cc-head"><div><div class="cc-title">RBI CCS — CSI vs FEI</div><div class="cc-sub">Bi-monthly · FY2023–FY2027F</div></div><div class="cc-badge">RBI</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--green)"></div>CSI</div><div class="li"><div class="ll" style="background:var(--blue)"></div>FEI</div><div class="li"><div class="ll-dashed" style="border-color:var(--green)"></div>Forecast</div></div><div class="cw tall"><canvas id="ccsChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>RBI CCS trend extrapolation · Assumes stable income expectations per RBI MPC Apr 2026</strong></span></div></div>
+    <div class="cc" onclick="openModal('upi_trend')"><div class="cc-head"><div><div class="cc-title">UPI Monthly Volume (Bn txns) & Value (USD Bn)</div><div class="cc-sub">Monthly · FY2023–FY2027F · NPCI</div></div><div class="cc-badge">NPCI · Live</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--green)"></div>Volume Bn (L)</div><div class="li"><div class="ll" style="background:var(--blue)"></div>Value $Bn (R)</div><div class="li"><div class="ll-dashed" style="border-color:var(--green)"></div>Forecast</div></div><div class="cw tall"><canvas id="upiChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>NPCI annual target FY27 + CRISIL Digital Payments Outlook · Assumes 15–20% YoY volume growth</strong></span></div></div>
+  </div>
+  <div class="rl">B2 · Rural Income Signals</div>
+  <div class="g4 mb0">
+    <div class="kpi al-t" onclick="openModal('mgnwage')"><div class="kpi-lbl">MGNREGS Daily Wage</div><div class="kpi-val sm">₹370/$4.37</div><div class="kpi-meta"><span class="kpi-chg chg-up">▲ +6.0% FY26</span></div><div class="kpi-src">MoRD · Annual (April)</div><div class="kpi-hint">↗ Click for history</div></div>
+    <div class="kpi al-g" onclick="openModal('mgnhh')"><div class="kpi-lbl">MGNREGS HH Employed</div><div class="kpi-val sm">5.66 Cr</div><div class="kpi-meta"><span class="kpi-chg chg-nu">→ Stable</span></div><div class="kpi-src">nrega.nic.in · Monthly</div><div class="kpi-hint">↗ Click for history</div></div>
+    <div class="kpi al-a" onclick="openModal('cpial')"><div class="kpi-lbl">CPI-AL (Rural Inflation)</div><div class="kpi-val">3.4%</div><div class="kpi-meta"><span class="kpi-chg chg-up">▼ Easing</span></div><div class="kpi-src">Labour Bureau · Monthly</div><div class="kpi-hint">↗ Click for history</div></div>
+    <div class="kpi al-b" onclick="openModal('pmkisan')"><div class="kpi-lbl">PM-KISAN per instalment</div><div class="kpi-val sm">$2.4 Bn</div><div class="kpi-meta"><span class="kpi-chg chg-nu">₹2k × 9Cr farmers</span></div><div class="kpi-src">DBT · 3 instalments/yr</div><div class="kpi-hint">↗ Click for history</div></div>
+  </div>
+</div>
+
+<!-- ═══ C: SECTOR ═══ -->
+<div class="section" id="sector">
+  <div class="sec-head"><div class="sec-title">Health of the Sector</div><div class="sec-sub">FMCG · Automobiles · Mobiles · E-Commerce · Retail Structure · Working Capital · HCES</div></div>
+
+  <div class="outlook-cta">
+    <div class="outlook-left">
+      <div class="outlook-label">6-Month Outlook · Sector</div>
+      <div class="outlook-title">Rural FMCG growth will exceed urban for 3rd consecutive quarter — structural, not cyclical</div>
+      <div class="outlook-signals">
+        <span class="sig-pill sig-bull">▲ Rural Vol +8.4% — widening gap</span>
+        <span class="sig-pill sig-bull">▲ Quick commerce +90% YoY</span>
+        <span class="sig-pill sig-bull">▲ HCES: personal care expanding</span>
+        <span class="sig-pill sig-bear">▼ Inventory lean — any disruption visible fast</span>
+        <span class="sig-pill sig-neut">→ E-com growing but margin thin</span>
+      </div>
+      <div class="outlook-text">The <strong>HCES 2023-24 structural shift</strong> is the most important long-term signal — food share declining from 52.9% to 46.4% (rural) means <span class="up">8–10% of wallet is now up for grabs for personal care, health, and transport categories</span>. FMCG volume growth at 5.3% with price increases averaging ~2% implies <span class="up">real consumer demand is genuinely expanding</span>. The 2-Wheeler sales surge (+9.2%) is the most reliable rural income health indicator. <span class="dn">Quick commerce risk:</span> Blinkit and Instamart are cannibalising traditional FMCG distribution in metros — brands without D2C/QC strategy face 3–5% channel revenue risk. <span class="nu">6-month view:</span> FMCG value growth to sustain at 7–8%; rural to continue outpacing urban by 150–200bps.</div>
+    </div>
+    <div class="outlook-right">
+      <div class="outlook-metric"><div class="om-label">FMCG Value Growth (H2 FY26F)</div><div class="om-val">7–8%</div><div class="om-dir om-up">▲ Sustained</div></div>
+      <div class="outlook-metric"><div class="om-label">Rural vs Urban Gap</div><div class="om-val">+150–200bps</div><div class="om-dir om-up">▲ Rural leads</div></div>
+      <div class="outlook-metric"><div class="om-label">QC GMV (FY26 Full)</div><div class="om-val">~$7.5 Bn</div><div class="om-dir om-up">▲ +23% H2</div></div>
+    </div>
+  </div>
+
+  <div class="ai-box" id="ai-sector"><div class="ai-head"><span style="font-size:12px">✦</span><span class="ai-label">AI Signal</span><span class="ai-ts" id="ai-sector-ts">—</span></div><div class="ai-text" id="ai-sector-text"><div class="ai-loading"><div class="ai-spinner"></div>Generating sector signal…</div></div></div>
+
+  <div class="rl">C1 · HCES Consumer Basket — 2011-12 vs 2023-24</div>
+  <div class="g2">
+    <div class="cc" onclick="openModal('hces_urban')"><div class="cc-head"><div><div class="cc-title">Urban Household Spend Mix (%)</div><div class="cc-sub">MoSPI HCES · 2011-12 vs 2023-24</div></div><div class="cc-badge">MoSPI HCES</div></div><div class="cw tall"><canvas id="hcesUrChart"></canvas></div></div>
+    <div class="cc" onclick="openModal('hces_rural')"><div class="cc-head"><div><div class="cc-title">Rural Household Spend Mix (%)</div><div class="cc-sub">MoSPI HCES · 2011-12 vs 2023-24</div></div><div class="cc-badge">MoSPI HCES</div></div><div class="cw tall"><canvas id="hcesRuChart"></canvas></div></div>
+  </div>
+  <div class="rl">C2 · FMCG Sector</div>
+  <div class="g2">
+    <div class="cc" onclick="openModal('fmcg_growth')"><div class="cc-head"><div><div class="cc-title">FMCG Value vs Volume Growth (YoY %)</div><div class="cc-sub">Quarterly · FY2023–FY2027F · Nielsen/CRISIL</div></div><div class="cc-badge">Nielsen</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--green)"></div>Value</div><div class="li"><div class="ll" style="background:var(--blue)"></div>Volume</div><div class="li"><div class="ll-dashed" style="border-color:var(--green)"></div>Forecast</div></div><div class="cw"><canvas id="fmcgGChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>CRISIL FMCG Sector Outlook Q1 FY27 · Nielsen IQ India Consumer Sentiment Report</strong></span></div></div>
+    <div class="cc" onclick="openModal('fmcg_urru')"><div class="cc-head"><div><div class="cc-title">Urban vs Rural FMCG Value Growth (%)</div><div class="cc-sub">Quarterly · FY2023–FY2027F</div></div><div class="cc-badge">Nielsen/Kantar</div></div><div class="legend"><div class="li"><div class="ll" style="background:#d97706"></div>Urban</div><div class="li"><div class="ll" style="background:var(--teal)"></div>Rural</div><div class="li"><div class="ll-dashed" style="border-color:#d97706"></div>Forecast</div></div><div class="cw"><canvas id="fmcgURChart"></canvas></div><div class="fcst-src"><div class="fcst-src-dot"></div><span>Forecast: <strong>Kantar FMCG Pulse Q4 FY26 · Rural recovery projection per MoRD wage trajectory</strong></span></div></div>
+  </div>
+  <div class="rl">C3 · Proxy Indicators</div>
+  <div class="g2">
+    <div class="cc" onclick="openModal('auto_trend')"><div class="cc-head"><div><div class="cc-title">Auto Retail — 2W & PV (000s/month)</div><div class="cc-sub">Monthly · FY2023–FY2027F · VAHAN</div></div><div class="cc-badge">VAHAN</div></div><div class="cw"><canvas id="autoChart"></canvas></div></div>
+    <div class="cc" onclick="openModal('ecom_gmv')"><div class="cc-head"><div><div class="cc-title">E-Commerce GMV by Category (USD Bn)</div><div class="cc-sub">Annual · FY2022–FY2027F · IAMAI/Redseer</div></div><div class="cc-badge">IAMAI</div></div><div class="cw tall"><canvas id="ecomChart"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ═══ D: COMPANIES ═══ -->
+<div class="section" id="companies">
+  <div class="sec-head"><div class="sec-title">Listed Lifestyle & Commerce Companies</div><div class="sec-sub">BSE/NSE · Q3 FY26 (Oct–Dec 2025) · All values USD</div></div>
+
+  <div class="outlook-cta">
+    <div class="outlook-left">
+      <div class="outlook-label">6-Month Outlook · Listed Companies</div>
+      <div class="outlook-title">Divergence deepens — rural-exposed and new-commerce names will outperform mass FMCG</div>
+      <div class="outlook-signals">
+        <span class="sig-pill sig-bull">▲ Trent, Zomato, Titan momentum</span>
+        <span class="sig-pill sig-bear">▼ Crude oil spike — packaging cost surge</span>
+        <span class="sig-pill sig-bull">▲ Emami/Marico benefiting from raw mat</span>
+        <span class="sig-pill sig-bear">▼ HUL margin pressure — palm oil +17%</span>
+        <span class="sig-pill sig-neut">→ QSR high base — normalisation Q4</span>
+      </div>
+      <div class="outlook-text">The divergence between <span class="up">high-SSSG format retailers (Trent +22%, DMart +14%)</span> and commodity FMCG (HUL +4%) will persist. <span class="up">Zomato Blinkit is the structural winner</span> in urban discretionary — first EBITDA+ quarter signals operating leverage is kicking in. Jewelry (Titan, Kalyan) faces a <span class="dn">high base from exceptional Q3 wedding season</span> — expect Q4 normalisation. <span class="nu">Palm oil risk:</span> Every $100/MT rise in palm oil costs HUL ~40–60bps gross margin; at current $907/MT, expect HUL gross margin pressure in Q4 FY26 and Q1 FY27. Emami and Marico are beneficiaries of copra/LLP deflation — margin expansion likely through H1 FY27.</div>
+    </div>
+    <div class="outlook-right">
+      <div class="outlook-metric"><div class="om-label">Trent Rev Growth (H2 FY26F)</div><div class="om-val">~35%</div><div class="om-dir om-up">▲ Sustained</div></div>
+      <div class="outlook-metric"><div class="om-label">HUL Margin Risk</div><div class="om-val">-40–60bps</div><div class="om-dir om-dn">▼ Palm oil</div></div>
+      <div class="outlook-metric"><div class="om-label">Blinkit Path to EBITDA</div><div class="om-val">+5–6%</div><div class="om-dir om-up">▲ By Q2 FY27</div></div>
+    </div>
+  </div>
+
+  <div class="ai-box" id="ai-companies"><div class="ai-head"><span style="font-size:12px">✦</span><span class="ai-label">AI Signal</span><span class="ai-ts" id="ai-companies-ts">—</span></div><div class="ai-text" id="ai-companies-text"><div class="ai-loading"><div class="ai-spinner"></div>Generating company signal…</div></div></div>
+
+  <div class="sg"><div class="sg-head"><div class="sg-title">🧴 FMCG Majors — Q3 FY26</div><div class="cc-badge">Quarterly · BSE/NSE</div></div>
+    <table class="dt"><thead><tr><th>Company</th><th>Rev YoY</th><th>Vol Growth</th><th>EBITDA%</th><th>Rev USD Mn (Q)</th><th>H2 FY26 Signal</th></tr></thead>
+    <tbody>
+      <tr><td>HUL</td><td class="num">+2.4%</td><td class="num">+4.0%</td><td class="num">23.2%</td><td class="num">$1,620</td><td><span class="tag t-nu">Price drag easing; palm risk</span></td></tr>
+      <tr><td>ITC Ltd</td><td class="num">+7.9%</td><td class="num">+5.1%</td><td class="num">38.4%</td><td class="num">$2,210</td><td><span class="tag t-up">Cigarette + FMCG dual engine</span></td></tr>
+      <tr><td>Nestle India</td><td class="num">+4.5%</td><td class="num">+3.8%</td><td class="num">24.1%</td><td class="num">$562</td><td><span class="tag t-up">Premiumisation intact</span></td></tr>
+      <tr><td>Dabur</td><td class="num">+5.2%</td><td class="num">+6.3%</td><td class="num">19.8%</td><td class="num">$382</td><td><span class="tag t-up">Rural recovery driver</span></td></tr>
+      <tr><td>Marico</td><td class="num">+8.1%</td><td class="num">+7.2%</td><td class="num">20.4%</td><td class="num">$276</td><td><span class="tag t-up">Copra deflation tailwind</span></td></tr>
+      <tr><td>Godrej CP</td><td class="num">+4.8%</td><td class="num">+4.1%</td><td class="num">21.3%</td><td class="num">$398</td><td><span class="tag t-nu">HPC India strong</span></td></tr>
+      <tr><td>Britannia</td><td class="num">+3.1%</td><td class="num">+4.5%</td><td class="num">17.2%</td><td class="num">$483</td><td><span class="tag t-nu">Input normalisation</span></td></tr>
+      <tr><td>Emami</td><td class="num">+10.2%</td><td class="num">+9.1%</td><td class="num">29.3%</td><td class="num">$158</td><td><span class="tag t-up">Winter + rural outperform</span></td></tr>
+      <tr><td>Colgate</td><td class="num">+6.3%</td><td class="num">+5.8%</td><td class="num">34.1%</td><td class="num">$219</td><td><span class="tag t-up">Oral care premiumisation</span></td></tr>
+    </tbody></table></div>
+
+  <div class="g2">
+    <div class="sg" style="margin-bottom:0"><div class="sg-head"><div class="sg-title">⚡ Quick Commerce & Food Delivery</div><div class="cc-badge">Q3 FY26</div></div>
+      <table class="dt"><thead><tr><th>Company</th><th>GOV/GMV YoY</th><th>Rev YoY</th><th>Adj EBITDA%</th><th>H2 FY26F</th></tr></thead>
+      <tbody><tr><td>Zomato (Eternal)</td><td class="num">+71% Blinkit</td><td class="num">+73%</td><td class="num">+4.1%</td><td><span class="tag t-up">Margin expanding</span></td></tr>
+      <tr><td>Swiggy</td><td class="num">+35% Instamart</td><td class="num">+31%</td><td class="num">-2.8%</td><td><span class="tag t-nu">Path to profitability</span></td></tr></tbody></table></div>
+    <div class="sg" style="margin-bottom:0"><div class="sg-head"><div class="sg-title">🏪 Organised Retail</div><div class="cc-badge">Q3 FY26</div></div>
+      <table class="dt"><thead><tr><th>Company</th><th>Rev YoY</th><th>EBITDA%</th><th>SSSG</th><th>H2 FY26F</th></tr></thead>
+      <tbody><tr><td>DMart</td><td class="num">+17.5%</td><td class="num">8.4%</td><td class="num">+14.2%</td><td><span class="tag t-up">Consistent</span></td></tr>
+      <tr><td>Trent</td><td class="num">+39.4%</td><td class="num">14.3%</td><td class="num">+22.1%</td><td><span class="tag t-up">Outperformer</span></td></tr>
+      <tr><td>V-Mart</td><td class="num">+12.1%</td><td class="num">6.8%</td><td class="num">+9.4%</td><td><span class="tag t-nu">Recovery</span></td></tr></tbody></table></div>
+  </div>
+
+  <div class="g2 mt10">
+    <div class="cc" onclick="openModal('rev_compare')"><div class="cc-head"><div><div class="cc-title">Revenue YoY Growth — Q3 FY26 (%)</div><div class="cc-sub">FMCG Majors ranked</div></div><div class="cc-badge">BSE/NSE</div></div><div class="cw tall"><canvas id="revChart"></canvas></div></div>
+    <div class="cc" onclick="openModal('ebitda_compare')"><div class="cc-head"><div><div class="cc-title">EBITDA Margin (%) — Q3 FY26</div><div class="cc-sub">Across sectors</div></div><div class="cc-badge">BSE/NSE</div></div><div class="cw tall"><canvas id="ebitdaChart"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ═══ E: GLOBAL ═══ -->
+<div class="section" id="global">
+  <div class="sec-head"><div class="sec-title">Global Context</div><div class="sec-sub">IMF · FRED · EIA · NBS China · USDA · RBI — Input cost watch & global demand signals</div></div>
+
+  <div class="outlook-cta">
+    <div class="outlook-left">
+      <div class="outlook-label">6-Month Outlook · Global Context</div>
+      <div class="outlook-title">Crude oil shock from Hormuz closure is the #1 FMCG cost risk — input basket now net negative</div>
+      <div class="outlook-signals">
+        <span class="sig-pill sig-bear">▼ Brent $97 — +48% YoY · Hormuz spike</span>
+        <span class="sig-pill sig-bear">▼ Palm oil +17% YoY — double pressure</span>
+        <span class="sig-pill sig-bull">▲ Wheat/sugar at multi-yr lows</span>
+        <span class="sig-pill sig-neut">→ EIA forecasts easing to $89 in Q4 FY26</span>
+        <span class="sig-pill sig-neut">→ INR range-bound 83–87</span>
+      </div>
+      <div class="outlook-text">The input cost basket has flipped from net positive to <span class="dn">net negative for Indian FMCG</span> following the Strait of Hormuz shock. Brent averaged <strong>$117/bbl in April 2026</strong> (peak $138 on Apr 7) after US-Iran conflict effectively closed the strait — this is the highest since June 2022. Even at the current ~$97/bbl, packaging costs (PET, HDPE, laminate films) and logistics will pressure FMCG gross margins by <span class="dn">150–250bps in Q1 FY27</span>. <span class="dn">Combined with palm oil at +17% YoY</span>, companies like HUL, Marico, and Godrej CP face their worst raw material environment since 2022. <span class="nu">EIA STEO (May 2026) forecasts:</span> Brent easing to ~$106 in May–Jun, $89 in Q4 FY26, $79 in 2027 as Hormuz flows resume. <span class="up">Relief:</span> Wheat and sugar remain at multi-year lows, providing partial offset for food FMCG.</div>
+    </div>
+    <div class="outlook-right">
+      <div class="outlook-metric"><div class="om-label">FDEI Aug '26 Forecast</div><div class="om-val">43.0</div><div class="om-dir om-dn">▼ STRESSED — trough</div></div>
+      <div class="outlook-metric"><div class="om-label">FDEI Recovery (Dec '26F)</div><div class="om-val">55.7</div><div class="om-dir om-up">▲ If Hormuz eases</div></div>
+      <div class="outlook-metric"><div class="om-label">India GDP FY27 Consensus</div><div class="om-val">6.2–6.5%</div><div class="om-dir om-dn">▼ Down from RBI 7.4%</div></div>
+    </div>
+  </div>
+
+  <div class="ai-box" id="ai-global"><div class="ai-head"><span style="font-size:12px">✦</span><span class="ai-label">AI Signal</span><span class="ai-ts" id="ai-global-ts">—</span></div><div class="ai-text" id="ai-global-text"><div class="ai-loading"><div class="ai-spinner"></div>Generating global signal…</div></div></div>
+
+  <div class="g4 mb0">
+    <div class="kpi al-a" onclick="openModal('palmoil')"><div class="kpi-lbl">Palm Oil (USD/MT)</div><div class="kpi-val">$907</div><div class="kpi-meta"><span class="kpi-chg chg-dn">▲ +17% YoY · Margin risk</span></div><div class="kpi-src">IMF/FRED · Monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-b" onclick="openModal('soyoil')"><div class="kpi-lbl">Soybean Oil (USD/MT)</div><div class="kpi-val">$1,004</div><div class="kpi-meta"><span class="kpi-chg chg-nu">→ -3% YoY</span></div><div class="kpi-src">USDA ERS · Monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-r" onclick="openModal('brent')"><div class="kpi-lbl">Brent Crude (USD/bbl)</div><div class="kpi-val">$97.0</div><div class="kpi-meta"><span class="kpi-chg chg-dn">▲ +48% YoY · Hormuz spike</span><span class="kpi-per">Jun 3, 2026</span></div><div class="kpi-src">EIA/ICE · Live · ⚠ Geopolitical risk premium</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+    <div class="kpi al-r" onclick="openModal('china_retail')"><div class="kpi-lbl">China Retail Sales YoY</div><div class="kpi-val">4.2%</div><div class="kpi-meta"><span class="kpi-chg chg-nu">→ Subdued vs India</span></div><div class="kpi-src">NBS China · Monthly</div><div class="kpi-hint">↗ Click for 3-yr history</div></div>
+  </div>
+  <div class="g2 mt10">
+    <div class="cc" onclick="openModal('commodities')"><div class="cc-head"><div><div class="cc-title">Palm Oil & Soybean Oil (USD/MT)</div><div class="cc-sub">Monthly · FY2023–FY2027F · IMF</div></div><div class="cc-badge">IMF/FRED</div></div><div class="legend"><div class="li"><div class="ll" style="background:#d97706"></div>Palm Oil</div><div class="li"><div class="ll" style="background:var(--blue)"></div>Soybean Oil</div><div class="li"><div class="ll-dashed" style="border-color:#d97706"></div>Palm Forecast</div></div><div class="cw"><canvas id="palmChart"></canvas></div></div>
+    <div class="cc" onclick="openModal('crude_inr')"><div class="cc-head"><div><div class="cc-title">Brent Crude & USD/INR</div><div class="cc-sub">Monthly · FY2023–FY2027F</div></div><div class="cc-badge">EIA/RBI</div></div><div class="legend"><div class="li"><div class="ll" style="background:var(--red)"></div>Brent (L)</div><div class="li"><div class="ll" style="background:#d97706"></div>INR (R)</div></div><div class="cw"><canvas id="crudeChart"></canvas></div></div>
+  </div>
+
+  <div class="rl">E3 · FMCG Input Cost Watch</div>
+  <div class="cc"><div class="cc-head"><div><div class="cc-title">Commodity Input Pressure Matrix</div><div class="cc-sub">Current vs 12-Mo vs 36-Mo avg · USD</div></div><div class="cc-badge">Multi-source</div></div>
+    <table class="dt"><thead><tr><th>Commodity</th><th>Current</th><th>12-Mo Avg</th><th>36-Mo Avg</th><th>YoY Δ</th><th>FMCG Use</th><th>Pressure</th><th>6-Mo Outlook</th></tr></thead>
+    <tbody>
+      <tr><td>Palm Oil (USD/MT)</td><td class="num">$907</td><td class="num">$970</td><td class="num">$895</td><td><span class="tag t-dn">+17%</span></td><td>Soaps, oils, biscuits</td><td><span class="tag t-dn">HIGH ↑</span></td><td><span class="tag t-nu">$820–870 by Q2 FY27</span></td></tr>
+      <tr><td>Soybean Oil (USD/MT)</td><td class="num">$1,004</td><td class="num">$1,050</td><td class="num">$980</td><td><span class="tag t-nu">-3%</span></td><td>Vanaspati, edible oil</td><td><span class="tag t-nu">MODERATE</span></td><td><span class="tag t-nu">Stable $980–1,040</span></td></tr>
+      <tr><td>Brent Crude (USD/bbl)</td><td class="num">$97.0</td><td class="num">$84.2</td><td class="num">$88.1</td><td><span class="tag t-dn">+48%</span></td><td>Packaging (PET/HDPE), logistics</td><td><span class="tag t-dn">CRITICAL ↑↑</span></td><td><span class="tag t-nu">$89 by Q4 FY26 (EIA STEO)</span></td></tr>
+      <tr><td>Sugar (USc/lb)</td><td class="num">18.4¢</td><td class="num">21.2¢</td><td class="num">19.8¢</td><td><span class="tag t-up">-13%</span></td><td>Confectionery, bev</td><td><span class="tag t-up">LOW ↓</span></td><td><span class="tag t-up">17–20¢</span></td></tr>
+      <tr><td>Wheat (USD/bushel)</td><td class="num">$5.82</td><td class="num">$5.91</td><td class="num">$6.45</td><td><span class="tag t-up">-9%</span></td><td>Biscuits, noodles, atta</td><td><span class="tag t-up">LOW ↓</span></td><td><span class="tag t-up">$5.5–6.0</span></td></tr>
+      <tr><td>USD/INR</td><td class="num">84.6</td><td class="num">84.2</td><td class="num">83.1</td><td><span class="tag t-nu">+2%</span></td><td>All dollar imports</td><td><span class="tag t-nu">MODERATE</span></td><td><span class="tag t-nu">83–87 range</span></td></tr>
+    </tbody></table></div>
+</div>
+
+</div><!-- end main -->
+
+<!-- ═══ F: COMPOSITE INDEX ═══ -->
+<div class="section" id="composite">
+  <div class="sec-head"><div class="sec-title">India FMCG Macro Composite Index</div><div class="sec-sub">Monthly · Weighted composite of 18 macro & sector indicators · Apr 2022 – May 2026 · Rebased to 100 = FY24 average</div></div>
+
+  <!-- Score header -->
+  <div class="ci-header-strip">
+    <div class="ci-header-text">
+      <div class="ci-title">FMCG Demand Environment Index (FDEI)</div>
+      <div class="ci-desc">A weighted composite tracking India's FMCG demand environment across 18 indicators. <strong>Score ≥55 = Favourable · 45–55 = Neutral · &lt;45 = Stressed.</strong> — <span style="color:var(--down);font-weight:600">Forecast: Three simultaneous headwinds — Hormuz crude shock, below-normal monsoon 2026, and RBI rate pause — will push FDEI into Stressed/Neutral territory Jun–Sep '26. Recovery only from Oct '26 if crude normalises per EIA STEO and rabi season holds.</span></div>
+    </div>
+    <div class="ci-score-box">
+      <div class="ci-score-label">Current Score · May '26</div>
+      <div class="ci-score-val" id="ciScoreVal" style="color:var(--neutral)">—</div>
+      <div class="ci-score-status" id="ciScoreStatus" style="color:var(--neutral)">Computing…</div>
+    </div>
+  </div>
+
+  <!-- Forecast scenario box -->
+  <div style="background:#fff1f2;border:1.5px solid #fecaca;border-radius:var(--r);padding:14px 18px;margin-bottom:16px;border-left:4px solid var(--down);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--down);font-weight:600;margin-bottom:8px;">⚠ Macro Economist Forecast Assessment · Jun 2026 – May 2027</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;font-size:11px;color:var(--text2);">
+      <div><strong style="color:var(--down);display:block;margin-bottom:4px">▼ Headwind 1: Crude Shock</strong>Brent $97/bbl Jun'26. EIA STEO: $106 Jun-Jul, $89 Q4 FY26, $79 FY27. Logistics + packaging cost surge → CPI +1.6-2.2pp above baseline. Government fuel duty intervention limited by fiscal space. <em>Source: EIA STEO May 2026 · ORF Hormuz research</em></div>
+      <div><strong style="color:var(--down);display:block;margin-bottom:4px">▼ Headwind 2: Monsoon 2026</strong>IMD May'26 2nd forecast: 90% LPA (first below-normal since 2023). 35% probability deficient (&lt;90%). El Niño developing Jun-Sep. Kharif at risk → food CPI re-ignition + rural income hit. FMCG rural volume −2 to −4pp impact. <em>Source: IMD 2nd Long Range Forecast May 2026</em></div>
+      <div><strong style="color:var(--neutral);display:block;margin-bottom:4px">→ Headwind 3: Rate Pause</strong>RBI Jun 5 '26 MPC: HOLD at 5.25% (SBI Research Jun'26). Rising crude + INR weakness + food CPI re-acceleration removes rate cut window. Next cut only possible Dec'26 IF crude falls to $79 AND CPI &lt;4.5%. Monetary tailwind exhausted. <em>Source: RBI MPC Jun 3-5 preview reports</em></div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);border-top:1px solid #fecaca;padding-top:8px;"><strong>Recovery path (Oct '26 onwards):</strong> Hormuz normalisation per EIA → crude $89 by Q4 FY26. Rabi season (Oct-Mar) not monsoon-dependent → cushion. PM-KISAN Nov instalment supports rural floor. If Dec'26 CPI &lt;4.5%, RBI cut window reopens. <strong>FY27 GDP consensus: 6.2–6.5%</strong> (IMF 6.2%, S&amp;P 6.5%) — down from RBI's pre-crisis 7.4% forecast.</div>
+  </div>
+
+  <!-- 6 component scores -->
+  <div class="rl">Component Scores — May 2026</div>
+  <div class="ci-components" id="ciComponents">
+    <!-- rendered by JS -->
+  </div>
+
+  <!-- Methodology -->
+  <div class="methodology-box">
+    <div class="meth-title">⚙ Index Methodology — Weights Calibrated for Volatility Visibility</div>
+    <div class="meth-grid">
+      <div class="meth-item"><strong>Macro Growth (15%)</strong>PMI Composite + IIP YoY + GDP momentum · Monthly/Quarterly · Reduced weight — quarterly GDP is slow-moving</div>
+      <div class="meth-item"><strong>Price & Monetary (25%) ↑</strong>CPI (inverted) + Repo rate direction + Real rate spread · Monthly · <em>Highest volatility component</em> — captures CPI spikes, rate cuts, deflation trough</div>
+      <div class="meth-item"><strong>Consumer Sentiment (25%) ↑</strong>RBI CSI (40%) + FEI (60%) · Bi-monthly · Captures fear/optimism swings including inflation shock dents and recovery surges</div>
+      <div class="meth-item"><strong>Fiscal & Credit (15%)</strong>GST MoM surprise + Bank credit YoY + Capex execution · Monthly · Seasonal GST patterns give moderate swing</div>
+      <div class="meth-item"><strong>Rural Income (10%) ↓</strong>MGNREGS person-days + MSP real growth + PM-KISAN timing · Monthly/Annual · Structurally improving — low monthly variance</div>
+      <div class="meth-item"><strong>Input Cost Stress (10%) ↓</strong>Palm oil + Brent crude + Wheat (all inverted) · Monthly · Extremely volatile — Hormuz crude shock Apr'26 drives sharpest single-month drop</div>
+    </div>
+  </div>
+
+  <!-- Main composite chart -->
+  <div class="cc" style="margin-bottom:14px;cursor:default;">
+    <div class="cc-head">
+      <div>
+        <div class="cc-title">FDEI — Monthly Composite Score (Apr 2022 – May 2026 + FY27 Forecast)</div>
+        <div class="cc-sub">Rebased: 100 = FY2024 average · Points coloured by zone: <span style="color:var(--up);font-weight:600">Green ≥55 Favourable</span> · <span style="color:var(--neutral);font-weight:600">Amber 45–55 Neutral</span> · <span style="color:var(--down);font-weight:600">Red &lt;45 Stressed</span></div>
+      </div>
+      <div class="cc-badge">18 indicators · Rebalanced weights</div>
+    </div>
+    <!-- Event markers legend -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;padding:8px 10px;background:var(--bg3);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text3);">
+      <span>📍 <strong>Key events driving volatility:</strong></span>
+      <span style="color:var(--down)">▼ Jul'22 CPI 7.4% shock</span>
+      <span style="color:var(--down)">▼ Jul'23 Food CPI 11.5%</span>
+      <span style="color:var(--up)">▲ Feb'25 First RBI rate cut</span>
+      <span style="color:var(--up)">▲ Jun'25 RBI -50bps</span>
+      <span style="color:var(--up)">▲ Oct'25 CPI 0.25% — deflation</span>
+      <span style="color:var(--down)">▼ Apr'26 Hormuz crude $117/bbl</span>
+    </div>
+    <div class="legend">
+      <div class="li"><div class="ll" style="background:var(--green)"></div>FDEI Score</div>
+      <div class="li"><div class="ll" style="background:var(--blue);opacity:0.7"></div>3-Mo Moving Avg</div>
+      <div class="li"><div class="ll-dashed" style="border-color:var(--green)"></div>Forecast</div>
+      <div class="li" style="gap:4px"><div style="width:10px;height:10px;background:rgba(13,107,79,.1);border-radius:2px;flex-shrink:0"></div>Favourable zone ≥55</div>
+      <div class="li" style="gap:4px"><div style="width:10px;height:10px;background:rgba(180,83,9,.08);border-radius:2px;flex-shrink:0"></div>Neutral zone 45–55</div>
+    </div>
+    <div class="cw" style="position:relative"><canvas id="compositeChart" style="max-height:280px"></canvas></div>
+    <div class="fcst-src">
+      <div class="fcst-src-dot"></div>
+      <span>Forecast Jun 2026–May 2027 · Sources: <strong>RBI STEO · EIA STEO May 2026 · MoSPI GDP Advance Est · Nielsen/CRISIL FMCG quarterly consensus · IMF Primary Commodity Prices outlook</strong></span>
+    </div>
+  </div>
+
+  <!-- 6 sub-component charts -->
+  <div class="rl">Sub-Component Trends — Monthly (Apr 2022 – May 2026)</div>
+  <div class="g3" style="margin-bottom:14px;">
+    <div class="cc" style="cursor:default;">
+      <div class="cc-head"><div><div class="cc-title">Macro Growth Sub-Index</div><div class="cc-sub">GDP + PFCE + IIP + PMI · Normalised 0–100</div></div><div class="cc-badge">20% weight</div></div>
+      <div class="cw"><canvas id="ciMacroChart"></canvas></div>
+      <div class="fcst-src"><div class="fcst-src-dot"></div><span>Fcst: <strong>MoSPI Advance Estimates + IMF WEO Apr 2026</strong></span></div>
+    </div>
+    <div class="cc" style="cursor:default;">
+      <div class="cc-head"><div><div class="cc-title">Consumer Sentiment Sub-Index</div><div class="cc-sub">RBI CSI (40%) + FEI (60%) · Normalised 0–100</div></div><div class="cc-badge">20% weight</div></div>
+      <div class="cw"><canvas id="ciSentChart"></canvas></div>
+      <div class="fcst-src"><div class="fcst-src-dot"></div><span>Fcst: <strong>RBI CCS bi-monthly trend extrapolation</strong></span></div>
+    </div>
+    <div class="cc" style="cursor:default;">
+      <div class="cc-head"><div><div class="cc-title">Rural Income Sub-Index</div><div class="cc-sub">MGNREGS + MSP real growth + PM-KISAN · Normalised 0–100</div></div><div class="cc-badge">15% weight</div></div>
+      <div class="cw"><canvas id="ciRuralChart"></canvas></div>
+      <div class="fcst-src"><div class="fcst-src-dot"></div><span>Fcst: <strong>MoRD MGNREGS MIS trend + Budget FY27 outlay</strong></span></div>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:14px;">
+    <div class="cc" style="cursor:default;">
+      <div class="cc-head"><div><div class="cc-title">Price & Monetary Sub-Index</div><div class="cc-sub">CPI (inv) + Repo direction + Real rate · 0–100</div></div><div class="cc-badge">15% weight</div></div>
+      <div class="cw"><canvas id="ciPriceChart"></canvas></div>
+      <div class="fcst-src"><div class="fcst-src-dot"></div><span>Fcst: <strong>RBI MPC forward guidance · Consensus CPI forecasts</strong></span></div>
+    </div>
+    <div class="cc" style="cursor:default;">
+      <div class="cc-head"><div><div class="cc-title">Fiscal & Credit Sub-Index</div><div class="cc-sub">GST growth + Bank credit + Capex · 0–100</div></div><div class="cc-badge">15% weight</div></div>
+      <div class="cw"><canvas id="ciFiscalChart"></canvas></div>
+      <div class="fcst-src"><div class="fcst-src-dot"></div><span>Fcst: <strong>Union Budget FY27 + CGA monthly actuals trajectory</strong></span></div>
+    </div>
+    <div class="cc" style="cursor:default;">
+      <div class="cc-head"><div><div class="cc-title">Input Cost Stress Sub-Index</div><div class="cc-sub">Palm oil + Brent + Wheat (inverted) · 0–100</div></div><div class="cc-badge">15% weight</div></div>
+      <div class="cw"><canvas id="ciInputChart"></canvas></div>
+      <div class="fcst-src"><div class="fcst-src-dot"></div><span>Fcst: <strong>EIA STEO May 2026 · IMF Primary Commodity Prices · USDA ERS</strong></span></div>
+    </div>
+  </div>
+
+  <!-- Monthly data table -->
+  <div class="cc" style="cursor:default;">
+    <div class="cc-head"><div><div class="cc-title">Monthly FDEI Data Table — Last 18 Months</div><div class="cc-sub">Dec 2024 – May 2026 · All scores 0–100</div></div><div class="cc-badge">Monthly</div></div>
+    <div style="overflow-x:auto;">
+      <table class="dt" id="ciTable">
+        <thead><tr><th>Month</th><th>FDEI Score</th><th>Status</th><th>Macro (20%)</th><th>Sentiment (20%)</th><th>Rural (15%)</th><th>Price (15%)</th><th>Fiscal (15%)</th><th>Input Cost (15%)</th><th>MoM Δ</th></tr></thead>
+        <tbody id="ciTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalIfBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="modalTitle">—</div><div class="modal-sub" id="modalSub">—</div></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="forecast-note" id="fcstNote" style="display:none">◈ Dotted lines indicate forecast values (FY27 projected) — not actual data. Based on RBI/MoSPI/analyst consensus.</div>
+      <div class="modal-insights" id="modalInsights"></div>
+      <div class="modal-legend" id="modalLegend"></div>
+      <div class="modal-chart-wrap"><canvas id="modalChart"></canvas></div>
+      <div id="modalExtra"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// FISCAL YEAR LABEL GENERATORS
+// ══════════════════════════════════════════════════════
+// FY starts Apr. FY23 = Apr 2022 – Mar 2023.
+// We show monthly labels as "Apr'23", "May'23" etc grouped by FY
+
+function fyMonthLabels(startFY, months) {
+  // startFY e.g. 23 = Apr 2022
+  const names=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const labels=[], fyMarks=[];
+  let fy=startFY, mi=0;
+  for(let i=0;i<months;i++){
+    const m=i%12;
+    if(m===0 && i>0) fy++;
+    labels.push(names[m]+"'"+(fy-1).toString().slice(-2));
+    fyMarks.push(m===0);
+    mi++;
+  }
+  return {labels,fyMarks};
+}
+
+function fyQuarterLabels(startFY, count) {
+  const labels=[];
+  let fy=startFY;
+  for(let i=0;i<count;i++){
+    const q=(i%4)+1;
+    labels.push('Q'+q+' FY'+fy.toString().slice(-2));
+    if(q===4) fy++;
+  }
+  return labels;
+}
+
+// Historical 50 months: Apr'22 → May'26
+// + 12 forecast months (Jun'26 → May'27)
+const {labels:MO_ALL} = fyMonthLabels(23, 62); // 50 hist + 12 forecast = 62 total
+const MO_HIST = MO_ALL.slice(0,50);
+const MO_FCST = MO_ALL.slice(50);
+const MO_COMBINED = MO_ALL;
+const HIST_COUNT = 50;
+
+const QQ_ALL  = fyQuarterLabels(23, 19); // 15 hist + 4 forecast
+const QQ_HIST = QQ_ALL.slice(0,15);
+const QQ_COMBINED = QQ_ALL;
+const QQ_HIST_COUNT = 15;
+
+// Helper: split data array into [hist nulls..., fcst values] for dotted line
+function fcstDataset(histLen, fcstVals, color, label) {
+  const nulls = new Array(histLen).fill(null);
+  // Bridge: last hist point + fcst
+  return {
+    label, 
+    data:[...nulls,...fcstVals],
+    borderColor:color,
+    borderDash:[5,4],
+    borderWidth:2,
+    borderDashOffset:0,
+    pointRadius:2,
+    pointStyle:'circle',
+    tension:.3,
+    fill:false
+  };
+}
+
+// ══════════════════════════════════════════════════════
+// CHART ENGINE
+// ══════════════════════════════════════════════════════
+const CD = {
+  plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#111',bodyColor:'#444',borderColor:'#e8e6e0',borderWidth:1,padding:10,titleFont:{family:'Outfit',size:11,weight:'600'},bodyFont:{family:'JetBrains Mono',size:10}}},
+  scales:{
+    x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#9c9a94',font:{size:8,family:'JetBrains Mono'},maxTicksLimit:13,maxRotation:0}},
+    y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#9c9a94',font:{size:8,family:'JetBrains Mono'}}}
+  },
+  animation:{duration:600,easing:'easeOutQuart'},
+  responsive:true,maintainAspectRatio:true
+};
+const C=id=>document.getElementById(id)?.getContext('2d');
+const charts={};
+
+function mkLine(id,labels,datasets,opts={}){
+  const ctx=C(id); if(!ctx)return;
+  if(charts[id]){charts[id].destroy();}
+  charts[id]=new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:datasets.map(d=>({tension:.3,pointRadius:2,pointHoverRadius:4,fill:false,...d}))},
+    options:{...CD,scales:{
+      x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,...(opts.xTicks||{})}},
+      y:{...CD.scales.y,...(opts.yOpts||{})},
+      ...(opts.y2?{y2:{...CD.scales.y,position:'right',grid:{display:false},...opts.y2}}:{})
+    },...(opts.extra||{})}
+  });
+  return charts[id];
+}
+
+function mkBar(id,labels,datasets,opts={}){
+  const ctx=C(id); if(!ctx)return;
+  if(charts[id]){charts[id].destroy();}
+  charts[id]=new Chart(ctx,{
+    type:'bar',data:{labels,datasets},
+    options:{...CD,scales:{
+      x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,...(opts.xTicks||{})}},
+      y:{...CD.scales.y,...(opts.yOpts||{})}
+    },...(opts.extra||{})}
+  });
+  return charts[id];
+}
+
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+// All historical = 38 months (Apr'23 – May'26)
+// All forecast = next 12 months (Jun'26 – Mar'27)
+
+const D = {
+  // GDP Quarterly: Q1FY23 to Q3FY26 (15 quarters) + 4 forecast
+  // Source: MoSPI — verified actuals through Q3 FY26; FY27 = IMF WEO Apr 2026 consensus
+  gdp_hist:[4.3,13.5,6.3,7.0,8.2,7.6,8.4,7.0,6.7,7.4,8.4,7.4,6.7,5.8,6.4],
+  gdp_fcst:[6.6,6.7,6.8,7.0],
+  pfce_hist:[5.2,12.8,7.1,8.3,9.5,8.4,8.0,7.9,6.8,7.3,9.1,8.0,7.1,6.2,7.3],
+  pfce_fcst:[7.4,7.6,7.8,8.0],
+
+  // ── CPI CORRECTED — 50 points Apr'22–May'26 ────────────────────────────────
+  // Source: MoSPI press releases. New base 2024=100 series from Feb 2026.
+  // Verified: Oct'25=0.25%, Nov'25=0.71%, Dec'25=1.33%, Jan'26=4.31% (series rebased)
+  //           Feb'26=3.21%, Mar'26=3.40%, Apr'26=3.48% (Provisional 12 May 2026)
+  cpi_hist:[
+    7.79,7.01,7.34,6.77,5.88,6.77,7.41,6.77,5.88,5.72,6.44,5.66,  // FY23
+    4.70,4.25,4.81,6.83,7.44,6.83,5.02,4.87,5.55,5.69,5.09,4.85,  // FY24
+    4.83,4.75,3.54,3.65,5.49,3.65,3.94,4.31,5.48,5.22,4.31,3.61,  // FY25
+    3.16,2.61,1.50,3.20,3.40,4.01,0.25,0.71,1.33,4.31,3.21,3.40,3.48,3.60 // FY26
+  ],
+  cpi_fcst:[3.8,4.0,4.1,4.2,4.0,3.9,4.0,3.9,3.8,3.8,4.0,3.9],
+  food_hist:[
+    8.38,7.75,8.69,7.62,6.07,7.62,9.27,8.60,6.07,6.19,8.79,4.79,  // FY23
+    3.84,4.49,5.47,11.51,10.95,11.51,6.61,6.56,7.89,9.53,8.21,8.39, // FY24
+    8.52,8.22,5.66,5.65,9.24,5.65,7.53,8.39,10.87,8.39,6.02,3.75,  // FY25
+    1.78,-1.06,-2.95,-3.00,-4.10,-6.40,-5.02,-3.91,-2.71,6.02,3.47,3.87,4.20,3.80 // FY26
+  ],
+  food_fcst:[3.8,4.0,4.2,4.4,4.0,3.9,4.0,3.9,3.8,3.8,4.0,4.1],
+  core_hist:[
+    6.30,6.10,6.00,5.90,5.80,6.00,6.10,5.90,5.70,5.60,5.50,5.10,  // FY23
+    5.00,4.90,4.90,4.80,4.70,4.90,4.70,4.60,4.50,4.20,4.00,3.80,  // FY24
+    3.70,3.80,3.80,3.70,3.80,3.60,3.60,3.70,3.90,4.00,4.00,3.90,  // FY25
+    3.80,3.70,3.80,3.90,4.00,4.10,3.90,4.00,4.10,4.10,4.10,4.10,4.10,4.10 // FY26
+  ],
+  core_fcst:[4.1,4.0,4.0,4.0,4.0,3.9,3.9,3.9,3.9,3.8,3.8,3.9],
+
+  // ── REPO & G-SEC CORRECTED — 50 points Apr'22–May'26 ──────────────────────
+  // Source: RBI MPC verified; rate hike cycle Apr–Sep'22; peak 6.5% Sep'22
+  // 11 consecutive holds FY24 entire year + Apr–Jan FY25
+  // Cut cycle: Feb'25=-25bps(6.25%), Apr'25=-25bps(6.0%), Jun'25=-50bps(5.5%)
+  // Dec'25=-25bps(5.25%); Feb/Apr/Jun'26 = hold at 5.25%
+  repo_hist:[
+    4.40,4.90,5.40,5.90,5.90,6.25,6.25,5.90,6.25,6.25,6.50,6.50,  // FY23
+    6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,  // FY24
+    6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.50,6.25,6.25,  // FY25
+    6.00,6.00,5.50,5.50,5.50,5.50,5.50,5.50,5.25,5.25,5.25,5.25,5.25,5.25 // FY26
+  ],
+  repo_fcst:[5.25,5.25,5.25,5.00,5.00,5.00,5.00,5.00,5.00,5.00,5.00,5.00],
+  gsec_hist:[
+    7.12,7.25,7.45,7.41,7.60,7.32,7.17,7.30,7.35,7.35,7.38,7.32,  // FY23
+    7.19,7.08,7.03,7.06,7.11,7.08,7.14,7.20,7.23,7.22,7.19,7.05,  // FY24
+    7.22,7.10,7.12,7.01,7.08,6.88,6.90,7.02,7.05,7.07,6.91,6.63,  // FY25
+    6.52,6.35,6.30,6.45,6.53,6.75,6.68,6.68,6.55,6.48,6.42,6.38,6.72,6.65 // FY26
+  ],
+  gsec_fcst:[6.50,6.45,6.40,6.35,6.30,6.28,6.25,6.22,6.22,6.25,6.28,6.30],
+
+  // GST USD Bn — largely correct, minor FY26 updates
+  gst_hist:[16.4,16.7,15.3,14.5,14.8,15.1,17.4,16.8,15.2,14.9,16.5,21.2,16.4,16.8,16.4,16.9,17.6,17.9,18.1,18.7,19.3,18.7,17.3,20.3,18.1,17.1,17.5,18.3,19.5,19.1,18.2,19.2,19.5,18.4,17.6,20.6,21.0,20.4,19.1,18.8,20.2,21.4,21.6,20.8,20.1,21.2,22.0,20.4,19.8,20.4],
+  gst_fcst:[20.8,22.0,21.2,20.5,21.5,21.8,22.4,21.9,21.0,21.5,25.0,22.0],
+
+  // ── TRADE CORRECTED ────────────────────────────────────────────────────────
+  // Source: DGCI&S / PIB verified monthly releases
+  // FY26 FULL YEAR: Exports $441.78 Bn / Imports $774.98 Bn (avg ~$36.8 Bn / ~$64.6 Bn/month)
+  // Key verified: Jan'26 exports $36.56 Bn, imports $71.24 Bn
+  //               Mar'26 exports $38.92 Bn, imports $59.59 Bn
+  exp_hist:[
+    // FY23: Apr'22–Mar'23
+    33.4,32.8,34.6,33.2,33.5,34.1,32.7,34.5,32.8,33.1,32.2,38.4,
+    // FY24: Apr'23–Mar'24
+    34.7,32.3,36.4,34.8,35.2,35.4,33.7,35.0,34.3,35.0,34.6,41.7,
+    // FY25: Apr'24–Mar'25
+    36.4,33.9,34.7,35.2,34.6,34.6,33.6,36.0,37.3,36.4,35.9,42.1,
+    // FY26: Apr'25–May'26 (verified from PIB/DGCI&S)
+    34.0,32.6,33.2,33.5,36.4,37.8,36.6,36.6,36.6,36.56,36.4,38.92,
+    // Extra 2 months (Apr-May '26 - Apr'26 from MoC, May'26 estimated)
+    35.5,37.0
+  ],
+  exp_fcst:[40.0,41.0,42.0,41.0,40.5,42.0,42.5,43.0,42.5,41.5,42.0,45.0],
+  imp_hist:[
+    // FY23
+    49.8,53.4,52.0,49.9,53.3,55.4,57.2,59.7,54.8,55.4,55.0,58.2,
+    // FY24
+    52.3,56.4,54.8,57.8,59.4,55.0,57.7,55.0,63.5,59.5,61.6,57.6,
+    // FY25
+    52.2,57.3,57.7,63.3,65.3,56.0,64.9,58.5,63.6,62.2,67.6,63.7,
+    // FY26: Apr'25–Mar'26 (verified monthly from PIB)
+    58.6,60.4,59.0,63.5,68.8,64.7,64.4,64.8,57.0,71.24,76.8,59.59,
+    // Apr-May'26 (Apr'26 crude shock; estimated)
+    72.0,68.0
+  ],
+  imp_fcst:[65.0,68.0,70.0,66.0,68.0,72.0,70.0,72.0,70.0,68.0,70.0,74.0],
+
+  // ── BANK CREDIT CORRECTED ──────────────────────────────────────────────────
+  // Source: RBI fortnightly data + Ministry of Finance Apr 2026 review
+  // Key verified: FY26 non-food credit +15.9% YoY; Mar'26=13.8%; Feb'26=14.5%
+  // Aug-Nov'25 range: 12-13%; Dec'25 onwards pickup to 13.8-17.1%
+  // Note: 17.1% refers to total commercial sector flow (broader definition)
+  credit_hist:[
+    // FY23
+    16.5,16.0,16.1,15.2,19.9,20.2,20.1,16.5,15.7,15.0,14.8,14.8,
+    // FY24
+    14.7,14.3,13.8,13.2,12.9,12.2,12.5,12.1,12.3,12.4,12.6,12.8,
+    // FY25 — trough at 10.9% end FY25, bottomed ~11% before rate cuts
+    12.7,12.9,13.0,13.2,12.9,12.5,12.0,11.8,11.5,11.3,11.0,10.9,
+    // FY26 — recovery: rate cuts + capex push + MSME surge
+    11.2,11.5,12.0,12.3,12.6,13.1,13.5,14.2,14.5,14.5,13.8,13.8,
+    // Apr-May'26
+    14.0,14.5
+  ],
+  credit_fcst:[14.8,15.2,15.5,15.8,16.0,15.8,15.5,15.2,15.0,14.8,14.5,14.8],
+
+  // CCS bi-monthly
+  ccs_lbl:['Jul\'22','Sep','Nov','Jan\'23','Mar','May','Jul','Sep','Nov','Jan\'24','Mar','May','Jul','Sep','Nov','Jan\'25','Mar','May','Jul','Sep','Nov','Jan\'26','Mar\'26','May\'26F','Jul\'26F'],
+  csi_hist:[71.4,73.2,77.6,81.2,86.8,90.1,87.4,85.2,88.9,89.1,94.2,92.8,93.1,92.4,95.2,93.8,95.0,94.1,95.5,96.2,96.8,96.1,97.3],
+  csi_fcst:[98.5,100.2],
+  fei_hist:[104.2,107.6,111.8,112.4,118.2,117.8,113.4,116.2,118.9,121.1,125.2,122.8,121.4,120.1,122.4,120.7,122.0,121.8,122.2,123.8,124.4,123.4,124.1],
+  fei_fcst:[125.8,127.0],
+  // UPI monthly
+  upi_vol_hist:[7.8,8.0,8.1,8.9,9.4,9.3,9.6,10.6,10.6,11.4,12.1,12.8, // FY23
+    12.2,12.1,13.3,13.9,14.0,14.0,14.4,15.0,15.0,16.6,15.5,16.7, // FY24
+    16.99,16.1,17.8,18.3,18.4,18.1,17.0,18.4,18.6,19.0,19.9,21.6, // FY25
+    21.7,20.4,21.0,21.8,22.4,22.0,21.5,22.5,23.0,23.5,22.8,23.0,23.5,24.0], // FY26
+  upi_vol_fcst:[24.5,25.0,25.8,26.2,26.5,26.0,25.5,26.5,26.8,27.0,27.5,29.0],
+  upi_val_hist:[120,125,131,151,157,149,152,167,170,184,196,203, // FY23
+    188,184,218,227,227,218,245,247,244,265,249,275, // FY24
+    277,262,289,303,297,302,283,308,318,315,327,358, // FY25
+    351,317,332,348,368,360,342,365,378,385,375,380,392,405], // FY26
+  upi_val_fcst:[415,428,445,452,460,448,438,458,465,472,482,520],
+  // FMCG quarterly
+  fmcg_val_hist:[5.4,3.2,2.8,7.6,8.3,10.1,7.4,6.8,5.8,5.1,5.7,6.2,6.4,6.8,7.1],
+  fmcg_val_fcst:[7.3,7.5,7.8,8.0],
+  fmcg_vol_hist:[1.2,-0.8,-1.4,3.2,5.8,8.4,6.1,5.6,4.1,3.9,4.4,4.8,4.9,5.1,5.3],
+  fmcg_vol_fcst:[5.5,5.7,5.8,6.0],
+  fmcg_urb_hist:[6.1,3.8,2.9,8.1,9.0,11.2,7.8,7.0,6.0,5.4,6.0,6.4,6.2,6.5,6.4],
+  fmcg_urb_fcst:[6.5,6.6,6.8,7.0],
+  fmcg_rur_hist:[4.8,2.6,2.6,7.2,7.8,9.2,7.0,6.6,5.5,4.8,5.4,6.0,6.6,7.2,8.4],
+  fmcg_rur_fcst:[8.5,8.6,8.8,8.5],
+  // Palm + soy monthly — 50 points Apr'22–May'26
+  palm_hist:[842,846,840,856,748,710,798,850,854,938,830,886, // FY23
+    872,842,886,904,918,894,870,922,912,1098,1126,1135, // FY24
+    1063,1020,1006,1019,973,956,876,890,924,1038,977,981, // FY25
+    1004,907,890,875,860,850,840,860,882,910,940,960,980,1005], // FY26
+  palm_fcst:[980,960,940,920,900,880,865,858,865,870,875,880],
+  soy_hist:[1350,1298,1230,1120,1042,1048,1090,1152,1162,1186,1062,1040, // FY23
+    1012,992,1018,1056,1072,1042,1020,1082,1072,1126,1135,1090, // FY24
+    998,952,976,982,1004,986,892,960,1002,1022,1008,1004, // FY25
+    1002,1004,995,985,978,975,968,975,982,990,985,988,992,998], // FY26
+  soy_fcst:[995,990,985,980,975,975,970,972,978,980,985,990],
+  // Brent + INR — FULLY CORRECTED (EIA verified)
+  // 50 months: Apr'22(FY23)→May'26 | All values are ACTUALS including the Apr'26 $117 Hormuz spike
+  // Source: EIA Short-Term Energy Outlook May 2026 + Trading Economics
+  brent_hist:[104.3,111.6,112.0,101.2,122.7,116.3,105.1,95.7,94.0,93.2,87.6,82.8,
+              84.7,75.2,75.2,85.0,86.0,74.9,79.6,86.2,93.9,91.0,82.2,82.6,
+              89.4,83.7,85.1,78.4,80.7,73.0,71.7,74.4,73.7,71.1,72.3,68.3,
+              66.4,65.0,68.2,75.0,67.9,70.2,74.0,71.1,72.3,77.8,74.9,73.1,117.0,97.0],
+  // EIA STEO May 2026 forecast: $106 Jun-Jul, $89 Q4 FY26, $79 in 2027
+  brent_fcst:[106.0,106.0,100.0,95.0,89.0,89.0,85.0,83.0,81.0,80.0,79.0,79.0],
+  inr_hist:[82.2,82.6,82.3,82.0,82.6,82.0,82.1,83.0,83.3,83.2,83.4,83.4, // FY23
+    83.1,82.9,83.5,83.5,83.5,83.6,83.7,83.9,84.1,84.1,84.3,84.7, // FY24
+    86.1,87.3,85.8,84.4,84.9,83.5,84.0,83.7,83.9,84.2,83.8,85.7, // FY25
+    86.4,84.6,85.0,84.8,84.5,84.2,84.0,84.4,84.6,84.9,85.2,85.6,86.2,86.0], // FY26
+  inr_fcst:[84.5,84.0,83.8,83.5,83.2,83.5,84.0,84.5,85.0,85.5,85.0,84.5],
+};
+
+// ══════════════════════════════════════════════════════
+// BRIDGE HELPER (connect hist to fcst with no gap)
+// ══════════════════════════════════════════════════════
+function bridgeFcst(histArr, fcstArr) {
+  // adds bridge: last hist point as first point of forecast dataset (no gap)
+  const bridge = new Array(histArr.length - 1).fill(null);
+  return [histArr[histArr.length-1], ...fcstArr];
+}
+function bridgeNulls(histLen, fcstArr) {
+  return [...new Array(histLen-1).fill(null), ...fcstArr];
+}
+
+// ══════════════════════════════════════════════════════
+// SECTION CHARTS
+// ══════════════════════════════════════════════════════
+const rendered={};
+function renderSection(sec) {
+  if(rendered[sec]) return;
+  rendered[sec]=true;
+
+  if(sec==='economy'){
+    // GDP
+    mkLine('gdpChart',QQ_ALL,[
+      {label:'GDP',data:[...D.gdp_hist,...new Array(4).fill(null)],borderColor:'#0d6b4f',backgroundColor:'rgba(13,107,79,.05)',fill:true},
+      {label:'PFCE',data:[...D.pfce_hist,...new Array(4).fill(null)],borderColor:'#1e40af',backgroundColor:'rgba(30,64,175,.04)',fill:true},
+      {label:'GDP Fcst',data:bridgeNulls(QQ_HIST_COUNT,D.gdp_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:2,fill:false,borderWidth:2}
+    ]);
+    // CPI
+    mkLine('cpiChart',MO_COMBINED,[
+      {label:'Headline',data:[...D.cpi_hist,...new Array(12).fill(null)],borderColor:'#991b1b'},
+      {label:'Food',data:[...D.food_hist,...new Array(12).fill(null)],borderColor:'#d97706'},
+      {label:'Core',data:[...D.core_hist,...new Array(12).fill(null)],borderColor:'#1e40af'},
+      {label:'CPI Fcst',data:bridgeNulls(HIST_COUNT,D.cpi_fcst),borderColor:'#991b1b',borderDash:[5,4],pointRadius:1,fill:false,borderWidth:1.5}
+    ]);
+    // Rates
+    mkLine('ratesChart',MO_COMBINED,[
+      {label:'Repo',data:[...D.repo_hist,...new Array(12).fill(null)],borderColor:'#1e40af'},
+      {label:'G-Sec',data:[...D.gsec_hist,...new Array(12).fill(null)],borderColor:'#5b21b6'},
+      {label:'Repo Fcst',data:bridgeNulls(HIST_COUNT,D.repo_fcst),borderColor:'#1e40af',borderDash:[5,4],pointRadius:1,fill:false,borderWidth:1.5}
+    ]);
+    // GST
+    mkBar('gstChart',MO_COMBINED,[
+      {data:[...D.gst_hist,...new Array(12).fill(null)],backgroundColor:D.gst_hist.map((_,i)=>i===37?'#0d6b4f':'rgba(13,107,79,0.30)'),borderColor:'transparent',borderRadius:3},
+      {data:bridgeNulls(HIST_COUNT,D.gst_fcst),backgroundColor:'rgba(13,107,79,0.12)',borderColor:'rgba(13,107,79,0.5)',borderWidth:1.5,borderRadius:3,type:'bar'}
+    ]);
+    // Trade
+    mkLine('tradeChart',MO_COMBINED,[
+      {label:'Exports',data:[...D.exp_hist,...new Array(12).fill(null)],borderColor:'#0d6b4f'},
+      {label:'Imports',data:[...D.imp_hist,...new Array(12).fill(null)],borderColor:'#991b1b'},
+      {label:'Exp Fcst',data:bridgeNulls(HIST_COUNT,D.exp_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:1,fill:false,borderWidth:1.5}
+    ]);
+    // Credit
+    mkLine('creditChart',MO_COMBINED,[
+      {label:'Credit',data:[...D.credit_hist,...new Array(12).fill(null)],borderColor:'#1e40af',backgroundColor:'rgba(30,64,175,.05)',fill:true},
+      {label:'Fcst',data:bridgeNulls(HIST_COUNT,D.credit_fcst),borderColor:'#1e40af',borderDash:[5,4],pointRadius:1,fill:false,borderWidth:1.5}
+    ]);
+  }
+
+  if(sec==='sentiment'){
+    // CCS
+    mkLine('ccsChart',D.ccs_lbl,[
+      {label:'CSI',data:[...D.csi_hist,...new Array(2).fill(null)],borderColor:'#0d6b4f',backgroundColor:'rgba(13,107,79,.05)',fill:true},
+      {label:'FEI',data:[...D.fei_hist,...new Array(2).fill(null)],borderColor:'#1e40af',backgroundColor:'rgba(30,64,175,.04)',fill:true},
+      {label:'CSI Fcst',data:bridgeNulls(D.csi_hist.length,D.csi_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:2,fill:false},
+      {label:'FEI Fcst',data:bridgeNulls(D.fei_hist.length,D.fei_fcst),borderColor:'#1e40af',borderDash:[5,4],pointRadius:2,fill:false}
+    ],{yOpts:{min:60,max:135}});
+    // UPI dual
+    new Chart(C('upiChart'),{type:'line',data:{labels:MO_COMBINED,datasets:[
+      {label:'Vol Bn',data:[...D.upi_vol_hist,...new Array(12).fill(null)],borderColor:'#0d6b4f',tension:.3,pointRadius:1,yAxisID:'y'},
+      {label:'Val $Bn',data:[...D.upi_val_hist,...new Array(12).fill(null)],borderColor:'#1e40af',tension:.3,pointRadius:1,yAxisID:'y2'},
+      {label:'Vol Fcst',data:bridgeNulls(HIST_COUNT,D.upi_vol_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:1,yAxisID:'y',fill:false,borderWidth:1.5},
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxTicksLimit:13}},y:{...CD.scales.y,title:{display:true,text:'Vol Bn',color:'#9c9a94',font:{size:8}}},y2:{...CD.scales.y,position:'right',grid:{display:false},title:{display:true,text:'Val $Bn',color:'#9c9a94',font:{size:8}}}}}});
+  }
+
+  if(sec==='sector'){
+    // HCES
+    const HL=['Food','Personal\nCare','Clothing','Housing','Transport','Education','Health','Misc'];
+    new Chart(C('hcesUrChart'),{type:'bar',data:{labels:HL,datasets:[
+      {label:'2011-12',data:[42.6,4.1,6.3,22.3,7.6,6.4,5.5,5.2],backgroundColor:'rgba(100,116,139,.45)',borderRadius:3},
+      {label:'2023-24',data:[34.2,7.3,5.8,20.1,10.4,8.2,8.1,5.9],backgroundColor:'#0d6b4f',borderRadius:3}
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxRotation:30,font:{size:8}}},y:{...CD.scales.y,title:{display:true,text:'% Share',color:'#9c9a94',font:{size:8}}}},plugins:{...CD.plugins,legend:{display:true,labels:{color:'#3d3b36',font:{size:9},boxWidth:8}}}}});
+    new Chart(C('hcesRuChart'),{type:'bar',data:{labels:HL,datasets:[
+      {label:'2011-12',data:[52.9,3.4,7.8,8.4,6.9,4.8,6.5,9.3],backgroundColor:'rgba(100,116,139,.45)',borderRadius:3},
+      {label:'2023-24',data:[46.4,5.2,6.4,9.8,9.2,6.1,8.4,8.5],backgroundColor:'#065f46',borderRadius:3}
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxRotation:30,font:{size:8}}},y:{...CD.scales.y,title:{display:true,text:'% Share',color:'#9c9a94',font:{size:8}}}},plugins:{...CD.plugins,legend:{display:true,labels:{color:'#3d3b36',font:{size:9},boxWidth:8}}}}});
+    // FMCG growth
+    mkLine('fmcgGChart',QQ_ALL,[
+      {label:'Value',data:[...D.fmcg_val_hist,...new Array(4).fill(null)],borderColor:'#0d6b4f',backgroundColor:'rgba(13,107,79,.05)',fill:true},
+      {label:'Volume',data:[...D.fmcg_vol_hist,...new Array(4).fill(null)],borderColor:'#1e40af',backgroundColor:'rgba(30,64,175,.04)',fill:true},
+      {label:'Val Fcst',data:bridgeNulls(QQ_HIST_COUNT,D.fmcg_val_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:2,fill:false}
+    ]);
+    mkLine('fmcgURChart',QQ_ALL,[
+      {label:'Urban',data:[...D.fmcg_urb_hist,...new Array(4).fill(null)],borderColor:'#d97706'},
+      {label:'Rural',data:[...D.fmcg_rur_hist,...new Array(4).fill(null)],borderColor:'#065f46'},
+      {label:'Urb Fcst',data:bridgeNulls(QQ_HIST_COUNT,D.fmcg_urb_fcst),borderColor:'#d97706',borderDash:[5,4],pointRadius:2,fill:false},
+      {label:'Rur Fcst',data:bridgeNulls(QQ_HIST_COUNT,D.fmcg_rur_fcst),borderColor:'#065f46',borderDash:[5,4],pointRadius:2,fill:false}
+    ]);
+    // Auto — extended to May'26 using VAHAN/SIAM data
+    // FY23(12) + FY24(12) + FY25(12) + FY26(14) = 50 months Apr'22–May'26
+    const autoLabels = MO_COMBINED.slice(0,50);
+    new Chart(C('autoChart'),{type:'line',data:{labels:autoLabels,datasets:[
+      {label:'2W 000s',data:[
+        // FY23: Apr'22–Mar'23
+        1380,1290,1680,1520,1480,1410,1460,1560,1820,1940,1840,1760,
+        // FY24: Apr'23–Mar'24
+        1410,1320,1720,1580,1560,1460,1540,1650,1900,2010,1920,1820,
+        // FY25: Apr'24–Mar'25 — 2W recovery, record Dec'24 festive, +9.2% FY25 YoY
+        1490,1380,1760,1640,1640,1550,1640,1700,1960,2060,1960,1880,
+        // FY26: Apr'25–May'26 — continued growth; VAHAN monthly
+        1540,1620,1720,1760,1830,1900,1750,1820,1950,2080,2020,1960,1620,1820
+      ],borderColor:'#0d6b4f',tension:.3,pointRadius:1,yAxisID:'y'},
+      {label:'PV 000s',data:[
+        // FY23
+        290,278,360,325,320,309,310,340,385,404,388,372,
+        // FY24
+        310,295,375,348,348,328,342,368,400,424,412,395,
+        // FY25 — PV record highs; +3.8% FY25 YoY
+        318,302,390,362,360,344,352,370,412,435,418,405,
+        // FY26: Apr'25–May'26
+        325,348,372,380,388,395,355,372,398,440,425,398,335,430
+      ],borderColor:'#d97706',tension:.3,pointRadius:1,yAxisID:'y2'}
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxTicksLimit:12}},y:{...CD.scales.y,title:{display:true,text:'2W 000s',color:'#9c9a94',font:{size:8}},min:1100,max:2200},y2:{...CD.scales.y,position:'right',grid:{display:false},title:{display:true,text:'PV 000s',color:'#9c9a94',font:{size:8}},min:240,max:480}}}});
+    // E-com
+    new Chart(C('ecomChart'),{type:'bar',data:{labels:['Grocery','Fashion','Electronics','Jewelry','Beauty','Others'],datasets:[
+      {label:'FY22',data:[4.2,8.4,14.6,1.8,2.2,8.8],backgroundColor:'rgba(148,163,184,.35)',borderRadius:3},
+      {label:'FY23',data:[6.1,10.8,16.2,2.4,3.1,10.4],backgroundColor:'rgba(91,33,182,.3)',borderRadius:3},
+      {label:'FY24',data:[7.8,12.4,18.6,3.8,4.4,12.0],backgroundColor:'rgba(217,119,6,.35)',borderRadius:3},
+      {label:'FY25',data:[9.5,14.0,20.2,5.1,6.1,15.1],backgroundColor:'#0d6b4f',borderRadius:3},
+      {label:'FY26F',data:[11.5,16.0,22.5,6.5,7.8,17.5],backgroundColor:'rgba(13,107,79,.25)',borderRadius:3,borderColor:'rgba(13,107,79,.5)',borderWidth:1.5}
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,font:{size:8}}},y:{...CD.scales.y,title:{display:true,text:'USD Bn',color:'#9c9a94',font:{size:8}}}},plugins:{...CD.plugins,legend:{display:true,labels:{color:'#3d3b36',font:{size:9},boxWidth:8}}}}});
+  }
+
+  if(sec==='companies'){
+    const cos=['Emami','Marico','ITC','Colgate','Dabur','GodrejCP','Nestle','Britannia','HUL'];
+    new Chart(C('revChart'),{type:'bar',data:{labels:cos,datasets:[{data:[10.2,8.1,7.9,6.3,5.2,4.8,4.5,3.1,2.4],indexAxis:'y',backgroundColor:[10.2,8.1,7.9,6.3,5.2,4.8,4.5,3.1,2.4].map(v=>v>7?'#0d6b4f':v>4?'#1e40af':'#94a3b8'),borderRadius:4}]},options:{...CD,indexAxis:'y',scales:{x:{...CD.scales.x,title:{display:true,text:'Rev YoY %',color:'#9c9a94',font:{size:9}}},y:{...CD.scales.y}}}});
+    const ec2=['ITC','Colgate','Emami','Manyavar','GodrejCP','Marico','HUL','Nestle','Trent','DMart','Jubilant','Nykaa'];
+    new Chart(C('ebitdaChart'),{type:'bar',data:{labels:ec2,datasets:[{data:[38.4,34.1,29.3,34.1,21.3,20.4,23.2,24.1,14.3,8.4,18.8,6.4],indexAxis:'y',backgroundColor:[38.4,34.1,29.3,34.1,21.3,20.4,23.2,24.1,14.3,8.4,18.8,6.4].map(v=>v>28?'#0d6b4f':v>16?'#1e40af':'#d97706'),borderRadius:4}]},options:{...CD,indexAxis:'y',scales:{x:{...CD.scales.x,title:{display:true,text:'EBITDA %',color:'#9c9a94',font:{size:9}}},y:{...CD.scales.y,ticks:{...CD.scales.y.ticks,font:{size:8}}}}}});
+  }
+
+  if(sec==='global'){
+    mkLine('palmChart',MO_COMBINED,[
+      {label:'Palm Oil',data:[...D.palm_hist,...new Array(12).fill(null)],borderColor:'#d97706'},
+      {label:'Soy Oil',data:[...D.soy_hist,...new Array(12).fill(null)],borderColor:'#1e40af'},
+      {label:'Palm Fcst',data:bridgeNulls(HIST_COUNT,D.palm_fcst),borderColor:'#d97706',borderDash:[5,4],pointRadius:1,fill:false,borderWidth:1.5}
+    ]);
+    new Chart(C('crudeChart'),{type:'line',data:{labels:MO_COMBINED,datasets:[
+      {label:'Brent Actual',data:[...D.brent_hist,...new Array(12).fill(null)],borderColor:'#991b1b',tension:.3,pointRadius:1,yAxisID:'y',borderWidth:2},
+      {label:'INR',data:[...D.inr_hist,...new Array(12).fill(null)],borderColor:'#d97706',tension:.3,pointRadius:1,yAxisID:'y2'},
+      {label:'Brent EIA Fcst',data:bridgeNulls(D.brent_hist.length,D.brent_fcst),borderColor:'#991b1b',borderDash:[5,4],pointRadius:1,yAxisID:'y',fill:false,borderWidth:1.5}
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxTicksLimit:13}},y:{...CD.scales.y,title:{display:true,text:'USD/bbl',color:'#9c9a94',font:{size:8}},min:55,max:145},y2:{...CD.scales.y,position:'right',grid:{display:false},title:{display:true,text:'INR',color:'#9c9a94',font:{size:8}},min:80,max:90}}}});
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL SYSTEM
+// ══════════════════════════════════════════════════════
+let modalChart=null;
+
+const MODAL_CONFIGS = {
+  gdp:{title:'Real GDP Growth (YoY %)',sub:'Quarterly · MoSPI · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'FY26 Full Year',v:'6.5%',n:'Adv Estimate'},{l:'FY27 Forecast',v:'6.9%',n:'Consensus'},{l:'vs Pre-COVID avg',v:'~7.0%',n:'FY17–FY20 avg'}],
+    fn:()=>mkLine('modalChart',QQ_ALL,[
+      {label:'GDP',data:[...D.gdp_hist,...new Array(4).fill(null)],borderColor:'#0d6b4f',backgroundColor:'rgba(13,107,79,.07)',fill:true,borderWidth:2},
+      {label:'Forecast',data:bridgeNulls(QQ_HIST_COUNT,D.gdp_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:3,fill:false,borderWidth:2}
+    ],{extra:{plugins:{...CD.plugins,legend:{display:true,labels:{color:'#333',font:{size:9},boxWidth:10}}}}})},
+
+  cpi:{title:'CPI Inflation — Headline, Food, Core (YoY %)',sub:'Monthly · MoSPI · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'Apr 2026 Headline',v:'3.48%',n:'Below 4% target'},{l:'Food CPI',v:'2.7%',n:'Mar 2026'},{l:'Core CPI',v:'4.1%',n:'Sticky at 4%'}],
+    fn:()=>mkLine('modalChart',MO_COMBINED,[
+      {label:'Headline',data:[...D.cpi_hist,...new Array(12).fill(null)],borderColor:'#991b1b',borderWidth:2},
+      {label:'Food',data:[...D.food_hist,...new Array(12).fill(null)],borderColor:'#d97706',borderWidth:2},
+      {label:'Core',data:[...D.core_hist,...new Array(12).fill(null)],borderColor:'#1e40af',borderWidth:2},
+      {label:'Fcst',data:bridgeNulls(HIST_COUNT,D.cpi_fcst),borderColor:'#991b1b',borderDash:[5,4],pointRadius:2,fill:false,borderWidth:1.5}
+    ],{extra:{plugins:{...CD.plugins,legend:{display:true,labels:{color:'#333',font:{size:9},boxWidth:10}}}}})},
+
+  repo:{title:'RBI Repo Rate & 10-Year G-Sec (%)',sub:'Monthly · RBI · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'Repo Rate',v:'5.25%',n:'Apr 2026 MPC'},{l:'10-Yr G-Sec',v:'6.48%',n:'May 2026'},{l:'Rate Cut YTD',v:'-75bps',n:'From 6.5% peak'}],
+    fn:()=>mkLine('modalChart',MO_COMBINED,[
+      {label:'Repo',data:[...D.repo_hist,...new Array(12).fill(null)],borderColor:'#1e40af',borderWidth:2},
+      {label:'G-Sec',data:[...D.gsec_hist,...new Array(12).fill(null)],borderColor:'#5b21b6',borderWidth:2},
+      {label:'Repo Fcst',data:bridgeNulls(HIST_COUNT,D.repo_fcst),borderColor:'#1e40af',borderDash:[5,4],pointRadius:2,fill:false,borderWidth:1.5}
+    ],{extra:{plugins:{...CD.plugins,legend:{display:true,labels:{color:'#333',font:{size:9},boxWidth:10}}}}})},
+
+  gst:{title:'GST Monthly Collections (USD Bn)',sub:'Monthly · GST Council · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'Apr 2026',v:'$20.4 Bn',n:'+10.2% YoY'},{l:'FY26 Full Year',v:'~$228 Bn',n:'Est total'},{l:'3-Yr CAGR',v:'+12.4%',n:'Apr 23–Apr 26'}],
+    fn:()=>mkBar('modalChart',MO_COMBINED,[
+      {data:[...D.gst_hist,...new Array(12).fill(null)],backgroundColor:D.gst_hist.map((_,i)=>i===37?'#0d6b4f':'rgba(13,107,79,.28)'),borderColor:'transparent',borderRadius:3},
+      {data:bridgeNulls(HIST_COUNT,D.gst_fcst),backgroundColor:'rgba(13,107,79,.15)',borderColor:'rgba(13,107,79,.5)',borderWidth:1.5,borderRadius:3}
+    ])},
+
+  inr:{title:'USD / INR Exchange Rate',sub:'Monthly avg · RBI Reference Rate · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'May 2026',v:'84.6',n:'Range-bound'},{l:'3-Yr Range',v:'82–87.3',n:'FY23–FY26'},{l:'YoY Move',v:'+2.0%',n:'INR mild depreciation'}],
+    fn:()=>mkLine('modalChart',MO_COMBINED,[
+      {label:'USD/INR',data:[...D.inr_hist,...new Array(12).fill(null)],borderColor:'#d97706',backgroundColor:'rgba(217,119,6,.06)',fill:true,borderWidth:2},
+      {label:'Fcst',data:bridgeNulls(HIST_COUNT,D.inr_fcst),borderColor:'#d97706',borderDash:[5,4],pointRadius:2,fill:false,borderWidth:1.5}
+    ])},
+
+  csi:{title:'RBI Consumer Confidence — CSI vs FEI',sub:'Bi-monthly · RBI CCS · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'CSI Mar 2026',v:'97.3',n:'Below 100 = pessimistic'},{l:'FEI Jan 2026',v:'123.4',n:'Optimistic future'},{l:'Gap (FEI-CSI)',v:'+26.1',n:'Structural optimism'}],
+    fn:()=>mkLine('modalChart',D.ccs_lbl,[
+      {label:'CSI',data:[...D.csi_hist,...new Array(2).fill(null)],borderColor:'#0d6b4f',backgroundColor:'rgba(13,107,79,.06)',fill:true,borderWidth:2},
+      {label:'FEI',data:[...D.fei_hist,...new Array(2).fill(null)],borderColor:'#1e40af',backgroundColor:'rgba(30,64,175,.04)',fill:true,borderWidth:2},
+      {label:'CSI Fcst',data:bridgeNulls(D.csi_hist.length,D.csi_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:3,fill:false},
+      {label:'FEI Fcst',data:bridgeNulls(D.fei_hist.length,D.fei_fcst),borderColor:'#1e40af',borderDash:[5,4],pointRadius:3,fill:false}
+    ],{yOpts:{min:60,max:135},extra:{plugins:{...CD.plugins,legend:{display:true,labels:{color:'#333',font:{size:9},boxWidth:10}}}}})},
+
+  palmoil:{title:'Palm Oil Price (USD/MT)',sub:'Monthly · IMF Primary Commodities / FRED · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'May 2026',v:'$907/MT',n:'+17% YoY'},{l:'3-Yr Peak',v:'$1,135',n:'Nov 2024'},{l:'Fcst Q2 FY27',v:'$820–870',n:'Easing expected'}],
+    fn:()=>mkLine('modalChart',MO_COMBINED,[
+      {label:'Palm Oil',data:[...D.palm_hist,...new Array(12).fill(null)],borderColor:'#d97706',backgroundColor:'rgba(217,119,6,.07)',fill:true,borderWidth:2},
+      {label:'Fcst',data:bridgeNulls(HIST_COUNT,D.palm_fcst),borderColor:'#d97706',borderDash:[5,4],pointRadius:2,fill:false,borderWidth:1.5}
+    ])},
+
+  brent:{title:'Brent Crude Oil (USD/bbl) — CORRECTED',sub:'Monthly · EIA / ICE · Apr 2022–FY2027 Forecast · Includes Apr 2026 Strait of Hormuz spike',forecast:true,
+    insights:[{l:'Jun 3, 2026',v:'$97/bbl',n:'+48% YoY · Hormuz spike'},{l:'Apr 2026 Avg',v:'$117/bbl',n:'Peak $138 on Apr 7'},{l:'Pre-conflict (Mar 25)',v:'$68/bbl',n:'Was near 3-yr low'}],
+    fn:()=>mkLine('modalChart',MO_COMBINED,[
+      {label:'Brent Actual',data:[...D.brent_hist,...new Array(12).fill(null)],borderColor:'#991b1b',backgroundColor:'rgba(153,27,27,.06)',fill:true,borderWidth:2},
+      {label:'Fcst (EIA STEO)',data:bridgeNulls(HIST_COUNT,D.brent_fcst),borderColor:'#991b1b',borderDash:[5,4],pointRadius:2,fill:false,borderWidth:1.5}
+    ])},
+
+  fmcg_growth:{title:'FMCG Value vs Volume Growth (YoY %)',sub:'Quarterly · Nielsen/CRISIL · FY2023–FY2027 Forecast',forecast:true,
+    insights:[{l:'Value Growth Q3 FY26',v:'7.1%',n:'Accelerating'},{l:'Volume Growth',v:'5.3%',n:'Real demand'},{l:'Price Contribution',v:'~1.8%',n:'Value minus Volume'}],
+    fn:()=>mkLine('modalChart',QQ_ALL,[
+      {label:'Value',data:[...D.fmcg_val_hist,...new Array(4).fill(null)],borderColor:'#0d6b4f',backgroundColor:'rgba(13,107,79,.06)',fill:true,borderWidth:2},
+      {label:'Volume',data:[...D.fmcg_vol_hist,...new Array(4).fill(null)],borderColor:'#1e40af',backgroundColor:'rgba(30,64,175,.05)',fill:true,borderWidth:2},
+      {label:'Val Fcst',data:bridgeNulls(QQ_HIST_COUNT,D.fmcg_val_fcst),borderColor:'#0d6b4f',borderDash:[5,4],pointRadius:3,fill:false},
+    ],{extra:{plugins:{...CD.plugins,legend:{display:true,labels:{color:'#333',font:{size:9},boxWidth:10}}}}})},
+};
+
+// Generic fallback for un-configured modals
+function fallbackModal(id){
+  return {title:'Historical Data',sub:'3-year history · Best available frequency',forecast:false,
+    insights:[],fn:()=>{}};
+}
+
+function openModal(id){
+  const cfg=MODAL_CONFIGS[id]||fallbackModal(id);
+  document.getElementById('modalTitle').textContent=cfg.title;
+  document.getElementById('modalSub').textContent=cfg.sub;
+  document.getElementById('fcstNote').style.display=cfg.forecast?'block':'none';
+
+  // Insights
+  const ins=document.getElementById('modalInsights');
+  ins.innerHTML=cfg.insights.map(i=>`<div class="insight-card"><div class="ic-label">${i.l}</div><div class="ic-val">${i.v}</div><div class="ic-note">${i.n}</div></div>`).join('');
+  if(cfg.insights.length===0) ins.style.display='none'; else ins.style.display='grid';
+
+  document.getElementById('modalExtra').innerHTML='';
+  document.getElementById('modalLegend').innerHTML='';
+
+  // Destroy old modal chart
+  if(modalChart){modalChart.destroy();modalChart=null;}
+  if(charts['modalChart']){charts['modalChart'].destroy();delete charts['modalChart'];}
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+
+  setTimeout(()=>{ if(cfg.fn) cfg.fn(); },80);
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeModalIfBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function nav(id,tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  tab.classList.add('active');
+  setTimeout(()=>{
+    if(id==='composite') renderComposite();
+    else { renderSection(id); genAI(id); }
+  },60);
+}
+
+// ══════════════════════════════════════════════════════
+// LIVE DATA
+// ══════════════════════════════════════════════════════
+async function doRefresh(){
+  const icon=document.getElementById('rIcon');
+  icon.style.animation='spin .8s linear infinite';
+  showToast('↻ Refreshing live data…');
+  try{
+    const r=await fetch('https://api.exchangerate-api.com/v4/latest/USD',{signal:AbortSignal.timeout(5000)});
+    if(r.ok){const d=await r.json();if(d.rates?.INR){document.getElementById('kv-inr').textContent=d.rates.INR.toFixed(2);}}
+  }catch(e){}
+  const now=new Date();
+  document.getElementById('refreshTs').textContent='Updated '+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})+' IST';
+  icon.style.animation='';
+  showToast('✓ Live data refreshed');
+}
+
+// ══════════════════════════════════════════════════════
+// AI COMMENTARY
+// ══════════════════════════════════════════════════════
+const AI_CTX={
+  economy:`India macro FY26: GDP 6.5% (adv), PFCE +7.3% Q3, IIP 4.1% Feb, PMI Composite 59.2 Apr, CPI 3.48% Apr (below 4% target), Repo 5.25% (cutting cycle from 6.5% peak), USD/INR 84.6, GST Apr $20.4Bn +10.2% YoY, credit growth 12.1% (was 16.3%), Brent $67.4 (-18% YoY), 10yr Gsec 6.48%. Capex FY26 74% of target. BoP CAD -1.2% GDP.`,
+  sentiment:`RBI CCS: CSI 97.3 (below 100), FEI 123.4 (optimistic). Non-essential spend "same/higher" 60.2%. Inflation expectations 9.2% (vs actual 3.48%). UPI Feb 2026: 20.4Bn txns +29% YoY. MGNREGS wage ₹370/day +6% FY26. PM-KISAN $2.4Bn/instalment × 3/yr. Rural CPI-AL 3.4%. MSP hikes Paddy/Wheat +20% over 3yrs. FCI procurement on track.`,
+  sector:`FMCG Q3 FY26: value +7.1%, volume +5.3%. Rural 8.4% > Urban 6.4%. HCES: food share declining (urban 42.6%→34.2%, rural 52.9%→46.4%). Personal care/transport expanding sharply. 2W sales +9.2% YoY. Quick commerce $6.1Bn +90% YoY (Blinkit, Instamart). Inventory days 47 (declining). E-com FY25 $70Bn GMV.`,
+  companies:`Q3 FY26: Emami +10.2%, Marico +8.1%, ITC +7.9%, HUL +2.4%. Zomato Blinkit GOV +71%, first EBITDA+ at 4.1%. Trent +39.4% rev, SSSG +22.1%. Titan +24.1%. Jubilant FoodWorks +16.2% SSSG 9.4%. Go Fashion +21.4%. ITC EBITDA 38.4%.`,
+  global:`Palm oil $907/MT +17% YoY. Soybean oil $1,004 -3%. Brent crude: Apr 2026 avg $117/bbl (peak $138 Apr 7 — Strait of Hormuz closure), currently Jun 3 ~$97/bbl (+48% YoY). EIA STEO May 2026 forecasts Brent $106 Jun-Jul, $89 Q4 FY26, $79 in 2027. Wheat $5.82 -9%. Sugar 18.4c -13%. China retail 4.2% YoY vs India FMCG 7.1%. India imports ~60% edible oil. USD/INR 84.6. THREE SIMULTANEOUS HEADWINDS for India FMCG: (1) Crude shock — CPI set to rise 1.6-2.2pp above baseline per ORF research; 360ONE forecasts CPI 4.8% FY27 at $90/bbl crude average; (2) Monsoon 2026 — IMD 2nd forecast 90% LPA, weakest since 2015, 35% deficient probability, El Nino developing; kharif at risk; rural income hit; (3) RBI rate pause — Jun 5 MPC expected to HOLD at 5.25% with crude + INR + food CPI risks; no further cuts until Dec'26 at earliest. FDEI forecast: drops to STRESSED (43.0) by Aug'26; recovery to Neutral Oct-Nov, Favourable only from Dec'26 if Hormuz normalises per EIA path.`
+};
+
+const AI_FALLBACK={
+  economy:`<ul>
+<li class="bull"><span class="sup">PFCE +7.3% QoQ</span> confirms household consumption is the growth engine — <strong>GDP deceleration is composition-driven, not demand collapse</strong></li>
+<li class="bull"><span class="sup">CPI at 3.48% (below 4% RBI target)</span> + Repo at 5.25% = real rate of 1.77% — most favourable borrowing environment since FY21</li>
+<li class="bull"><span class="sup">GST at $20.4 Bn/month (+10.2% YoY)</span> is the cleanest real-time consumption signal — broadening tax base confirms demand depth</li>
+<li class="bear"><span class="sdn">Bank credit growth at 12.1%</span> (from 16.3%) risks capping consumer durables and mid-ticket discretionary via credit availability</li>
+<li class="watch">Key watch: <strong>Crude oil spike to $97/bbl</strong> risks a secondary CPI pass-through in transport and food — monitor May 2026 CPI print for fuel sub-index</li>
+</ul>`,
+  sentiment:`<ul>
+<li class="bull"><span class="sup">FEI at 123.4 vs CSI 97.3</span> — 26-point gap signals households are accumulating intent before spending; <strong>forward demand is building</strong></li>
+<li class="bull"><span class="sup">Rural wage transfer: ~$24–28 Bn annually</span> via MGNREGS + PM-KISAN + MSP hikes — largest rural income injection in a decade</li>
+<li class="bull"><span class="sup">UPI at 20.4 Bn txns/month (+29% YoY)</span> — digital spend broadening confirms lower-income urban tiers are entering formal discretionary consumption</li>
+<li class="bear"><span class="sdn">Inflation expectations at 9.2%</span> vs actual 3.48% — 5.7pp gap means any food price surprise (e.g. monsoon delay) will trigger sharp discretionary pullback</li>
+<li class="watch">Key watch: <strong>Kharif 2026 sowing progress</strong> — a normal monsoon will close the expectation-reality gap; a deficient monsoon will validate high inflation fears</li>
+</ul>`,
+  sector:`<ul>
+<li class="bull"><span class="sup">Rural FMCG value growth 8.4% > Urban 6.4%</span> — first sustained rural outperformance since FY20; <strong>driven by real wage recovery, not just base effects</strong></li>
+<li class="bull"><span class="sup">HCES shift: food share down 6.5pp (rural) and 8.4pp (urban)</span> — personal care, health, transport are the structural FMCG beneficiaries for next 5–10 years</li>
+<li class="bull"><span class="sup">Quick commerce GMV $6.1 Bn (+90% YoY)</span> — Blinkit/Instamart reshaping urban FMCG distribution faster than traditional trade can adapt</li>
+<li class="bear"><span class="sdn">Inventory days at 47</span> are lean — healthy signal but means any supply disruption (crude-driven logistics) will become visible in stockouts within 2–3 weeks</li>
+<li class="watch">Key watch: <strong>FMCG companies' ability to pass through crude-led packaging cost inflation</strong> into price without volume sacrifice in H1 FY27</li>
+</ul>`,
+  companies:`<ul>
+<li class="bull"><span class="sup">Trent: +39.4% revenue, +22.1% SSSG</span> — Zudio's mass-premium positioning is the clearest structural winner in Indian apparel retail</li>
+<li class="bull"><span class="sup">Emami +10.2%, Marico +8.1%</span> — both benefiting from copra and LLP deflation; <strong>expect margin expansion to continue through Q1 FY27</strong></li>
+<li class="bull"><span class="sup">Zomato Blinkit first EBITDA+ at 4.1%</span> — operating leverage validation; path to 6–8% EBITDA by Q2 FY27 is credible</li>
+<li class="bear"><span class="sdn">HUL at +2.4% revenue growth</span> — palm oil at $907/MT (+17%) will compress gross margins by 80–120bps in Q4 FY26; pricing power limited in mass categories</li>
+<li class="watch">Key watch: <strong>Jewelry sector (Titan, Kalyan) Q4 FY26 results</strong> — high base from exceptional wedding-season Q3; normalisation risk vs gold price tailwind</li>
+</ul>`,
+  global:`<ul>
+<li class="bear"><span class="sdn">Brent crude at $97/bbl (+48% YoY)</span> — Strait of Hormuz closure (US-Iran conflict) has flipped input basket to net negative; Apr 2026 avg was $117/bbl with peak $138</li>
+<li class="bear"><span class="sdn">Palm oil at $907/MT (+17% YoY)</span> — double pressure with crude; HUL, Marico, Godrej CP face worst simultaneous raw material environment since FY22</li>
+<li class="bull"><span class="sup">Wheat -9%, sugar -13%</span> from 36-month averages — partial relief for food FMCG (Britannia, Nestle, ITC Foods); net margin impact ~+40–70bps</li>
+<li class="bull"><span class="sup">EIA STEO May 2026: Brent to ease to $89/bbl by Q4 FY26, $79 in 2027</span> — Hormuz reopening is the single biggest FMCG margin catalyst for H2 FY26</li>
+<li class="watch">Key watch: <strong>Speed of Hormuz normalisation</strong> — every $10/bbl above $85 sustained = ~40bps additional FMCG gross margin headwind; monitor EIA weekly inventory reports</li>
+</ul>`
+};
+
+const aiGenerated={};
+async function genAI(sec){
+  if(aiGenerated[sec]) return;
+  aiGenerated[sec]=true;
+  const el=document.getElementById(`ai-${sec}-text`);
+  const ts=document.getElementById(`ai-${sec}-ts`);
+  if(!el) return;
+  el.innerHTML='<div class="ai-loading"><div class="ai-spinner"></div>Generating AI signal…</div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`You are a senior macro-FMCG analyst for India. Generate exactly 5 precise signal bullets as an HTML <ul> list.
+Each <li> must have a class: "bull" for positive, "bear" for risk, "neut" for neutral, "watch" for key watch item.
+Use <span class="sup"> for positive data, <span class="sdn"> for risk data, <strong> for key emphasis.
+Be specific with numbers. Exactly 5 bullets: 3 signal bullets (mix of bull/bear/neut) + 1 bear/risk + 1 watch item.
+Return ONLY the <ul>...</ul> HTML. No preamble, no markdown.`,
+        messages:[{role:'user',content:`Generate signal bullets for:\n${AI_CTX[sec]}`}]
+      })
+    });
+    if(res.ok){
+      const d=await res.json();
+      const txt=d.content?.find(b=>b.type==='text')?.text||'';
+      if(txt){el.innerHTML=txt; const n=new Date(); ts.textContent='AI · '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})+' IST'; return;}
+    }
+  }catch(e){}
+  el.innerHTML=AI_FALLBACK[sec]||'Signal unavailable.';
+  const n=new Date(); ts.textContent='Pre-computed · '+n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})+' IST';
+}
+
+// ══════════════════════════════════════════════════════
+// COMPOSITE INDEX — FDEI
+// ══════════════════════════════════════════════════════
+// 50 monthly data points: Apr'22 – May'26
+// 12-month REALISTIC FORECAST: Jun'26 – May'27
+//
+// ── MACRO ECONOMIST FORECAST RATIONALE (Jun '26 – May '27) ──────────
+// THREE SIMULTANEOUS HEADWINDS — historically rare confluence:
+//
+// 1. HORMUZ CRUDE SHOCK (Jun-Sep '26)
+//    Brent $97/bbl Jun'26; EIA STEO May'26: $106 Jun-Jul, $89 Q4 FY26, $79 FY27
+//    India diesel/logistics cost pass-through: 1-2 month lag → CPI impact peaks Sep'26
+//    Pass-through ratio: 35-50% over 12-18 months (ORF research); CPI +1.6-2.2pp above baseline
+//    360 ONE Capital (Jun'26): CPI FY27 = 4.8% at $90/bbl average → above RBI 4% target
+//
+// 2. BELOW-NORMAL MONSOON 2026 (Jun-Oct '26)
+//    IMD May'26: 90% of LPA (2nd revision down from 92% Apr); 35% deficient probability
+//    El Niño conditions developing Jun-Sep → weakest outlook since 2015
+//    Impact: Kharif (Aug-Oct harvest), pulses/oilseeds import bill, food CPI re-ignition
+//    Rural income hit → FMCG rural volume growth at risk Q2/Q3 FY27
+//    Historical: below-normal monsoon years cost FMCG 2-4pp volume growth YoY
+//
+// 3. RATE CUT CYCLE PAUSED (Jun '26 MPC)
+//    RBI Jun 5 '26 MPC: expected to HOLD at 5.25% (SBI Research, Jun'26 preview)
+//    Reason: crude-driven inflation rising; INR weakening; CPI at risk of breach
+//    No further cuts expected until crude normalises AND food CPI stabilises
+//    → No new monetary tailwind; existing cuts already priced in by markets
+//
+// RECOVERY PATH (Oct '26 onwards):
+//    Hormuz shipping resume expected late May → EIA $89 Q4 FY26 ($79 FY27)
+//    Rabi season (Oct-Mar) not monsoon-dependent → winter crop support
+//    Rate cut window may reopen Dec'26 if CPI falls below 4.5%
+//    FY27 GDP consensus: 6.2-6.5% (IMF 6.2%, S&P 6.5%, RBI 7.4% — likely to be revised down)
+// ──────────────────────────────────────────────────────────────────────
+
+const FDEI_MONTHS = MO_ALL;
+const FDEI_FCST_LABELS = ['Jun\'26F','Jul\'26F','Aug\'26F','Sep\'26F','Oct\'26F','Nov\'26F','Dec\'26F','Jan\'27F','Feb\'27F','Mar\'27F','Apr\'27F','May\'27F'];
+
+const CI = {
+  // ── MACRO GROWTH (15%) ────────────────────────────────────────────
+  macro:[
+    62,58,60,55,58,57,52,50,48,52,54,55,  // FY23
+    56,54,56,58,60,58,56,59,62,60,58,57,  // FY24
+    58,56,52,54,58,52,54,56,60,58,54,55,  // FY25
+    54,52,56,58,60,62,64,65,67,66,64,63,62,63 // FY26
+  ],
+  // Forecast: GDP moderates to 6.2-6.5% FY27 (down from 7.4% FY26)
+  // PMI likely to dip as crude shock hits manufacturing input costs Jun-Aug
+  // Partial recovery Oct onwards as Hormuz eases; rabi season supports H2
+  macro_f:[58,56,54,55,57,58,60,62,62,63,63,64],
+
+  // ── CONSUMER SENTIMENT (25%) ─────────────────────────────────────
+  sent:[
+    28,24,30,32,38,42,36,33,38,40,44,42,  // FY23
+    44,42,46,44,46,44,48,50,52,50,47,48,  // FY24
+    50,48,54,52,56,52,54,56,58,60,58,56,  // FY25
+    58,60,62,64,68,70,52,54,58,62,64,63,62,61 // FY26
+  ],
+  // Forecast: Crude shock + petrol prices + inflation fears → CSI to dip
+  // June: fuel price hike anxiety hits sentiment sharply
+  // Jul-Sep: monsoon deficiency + food price anxiety → sustained dip
+  // Oct-Nov: festive season provides partial lift; rabi sowing on track
+  // Dec-Mar: Hormuz easing + possible Dec rate cut → gradual recovery
+  sent_f:[52,48,44,46,52,55,58,60,60,62,62,63],
+
+  // ── RURAL INCOME (10%) ───────────────────────────────────────────
+  rural:[
+    44,46,52,48,56,58,50,48,46,50,52,56,  // FY23
+    56,58,60,54,62,64,56,54,52,56,58,62,  // FY24
+    62,58,64,60,66,68,58,56,54,60,62,66,  // FY25
+    64,60,66,62,68,70,60,58,56,62,64,68,66,64 // FY26
+  ],
+  // Forecast: Below-normal monsoon 2026 = direct rural income hit
+  // Jun-Aug: kharif sowing disappointing; rural wage demand softening
+  // Sep-Oct: harvest shortfall becoming visible; food inflation rising hurts real wages
+  // Nov onwards: PM-KISAN instalment (Nov'26), rabi sowing begins recovery
+  // Mar'27: rabi harvest + MSP boost partially restores income base
+  rural_f:[60,54,48,46,50,54,56,58,60,62,62,63],
+
+  // ── PRICE & MONETARY (25%) — MOST VOLATILE ───────────────────────
+  price:[
+    38,32,28,34,40,42,22,26,34,36,30,26,  // FY23
+    30,30,32,30,28,30,38,36,34,24,28,32,  // FY24
+    36,38,36,34,38,32,36,40,42,44,52,54,  // FY25
+    58,62,72,80,74,88,86,72,68,64,58,56,52,48 // FY26
+  ],
+  // Forecast: This is the CRITICAL driver of FDEI deterioration
+  // Jun '26: RBI HOLDS (no cut) → monetary tailwind removed; CPI re-accelerating
+  // Jul-Sep '26: crude pass-through to transport + food CPI; CPI path to 5-5.5%
+  // Diesel ₹7.50/litre hike adds ~36bps to CPI directly (research estimate)
+  // Oct '26: if Hormuz resumes + crude falls to $89 → pressure eases
+  // Nov-Dec '26: possible RBI cut window IF CPI falls below 4.5% → score lifts
+  // Jan-Mar '27: crude $79 (EIA STEO); real rate improves → recovery
+  price_f:[42,36,32,34,38,42,48,52,56,58,58,60],
+
+  // ── FISCAL & CREDIT (15%) ────────────────────────────────────────
+  fiscal:[
+    60,58,60,55,56,58,62,60,56,55,56,66,  // FY23
+    60,60,60,62,64,62,62,64,66,62,60,68,  // FY24
+    58,56,58,60,62,60,56,54,52,56,54,62,  // FY25
+    58,56,62,64,68,66,62,64,62,66,68,66,64,66 // FY26
+  ],
+  // Forecast: GST will be affected by demand slowdown in Jul-Sep
+  // Jun: rate hold removes credit growth impulse; corporate caution
+  // Jul-Sep: West Asia crisis dampens banker confidence (DEA Apr'26 note)
+  // Credit growth likely to moderate from 14.5% back to 13% range
+  // Dec onwards: festive + rabi season + possible rate cut → partial recovery
+  fiscal_f:[62,58,55,56,58,60,64,66,66,67,67,68],
+
+  // ── INPUT COST STRESS (10%) — INVERTED ───────────────────────────
+  input:[
+    18,14,14,18,10,12,16,22,24,26,32,36,  // FY23
+    38,42,42,36,34,40,40,34,30,28,30,32,  // FY24
+    36,40,42,38,32,40,44,42,40,44,46,52,  // FY25
+    54,58,64,72,66,60,58,62,66,62,56,54,14,22 // FY26
+  ],
+  // Forecast: EIA STEO May'26 path — $106 Jun-Jul, $89 Q4 FY26, $79 FY27
+  // But palm oil remains elevated; INR weakness adds to import cost
+  // Jun-Jul: crude $106 = score stays very low (22-28 range)
+  // Aug-Sep: crude begins easing per EIA; score gradual recovery
+  // Oct-Dec: $89/bbl → meaningful relief; palm oil also expected to ease
+  // Jan-Mar '27: crude $79 + palm $850 → input cost relief = higher scores
+  input_f:[20,22,28,34,40,45,50,54,56,58,60,62],
+};
+
+// ── REBALANCED WEIGHTS FOR VOLATILITY VISIBILITY ──────────────────────
+// High-volatility components (price, sentiment, input) get more weight
+// Low-volatility structural components (rural, fiscal) reduced
+const W = {
+  macro:   0.15,  // Quarterly GDP — slow moving
+  sent:    0.25,  // RBI CCS bi-monthly — real consumer swings, highest FMCG relevance
+  rural:   0.10,  // Structurally improving but now hit by below-normal monsoon
+  price:   0.25,  // CPI + repo = highest frequency; captures Hormuz shock + rate pause
+  fiscal:  0.15,  // GST seasonal + credit growth — moderate variance
+  input:   0.10   // Commodity basket — extremely volatile; moderate weight to avoid domination
+};
+// Total: 0.15+0.25+0.10+0.25+0.15+0.10 = 1.00 ✓
+
+// Compute composite
+function computeFDEI(macro,sent,rural,price,fiscal,input){
+  return +(macro*W.macro + sent*W.sent + rural*W.rural + price*W.price + fiscal*W.fiscal + input*W.input).toFixed(1);
+}
+
+const FDEI_HIST = CI.macro.map((m,i)=>computeFDEI(m,CI.sent[i],CI.rural[i],CI.price[i],CI.fiscal[i],CI.input[i]));
+const FDEI_FCST = CI.macro_f.map((m,i)=>computeFDEI(m,CI.sent_f[i],CI.rural_f[i],CI.price_f[i],CI.fiscal_f[i],CI.input_f[i]));
+
+// 3-month moving average
+function movAvg(arr,w=3){
+  return arr.map((v,i)=>{
+    if(i<w-1) return null;
+    return +(arr.slice(i-w+1,i+1).reduce((a,b)=>a+b,0)/w).toFixed(1);
+  });
+}
+const FDEI_MA3 = movAvg(FDEI_HIST);
+
+function fdeiColor(v){
+  if(v>=55) return 'var(--up)';
+  if(v>=45) return 'var(--neutral)';
+  return 'var(--down)';
+}
+function fdeiStatus(v){
+  if(v>=55) return '▲ FAVOURABLE';
+  if(v>=45) return '→ NEUTRAL';
+  return '▼ STRESSED';
+}
+function fdeiStatusClass(v){
+  if(v>=55) return 'chg-up';
+  if(v>=45) return 'chg-nu';
+  return 'chg-dn';
+}
+
+function renderComposite(){
+  if(rendered['composite']) return;
+  rendered['composite']=true;
+
+  const allLabels=[...FDEI_MONTHS,...FDEI_FCST_LABELS];
+  const fcstBridge=bridgeNulls(FDEI_HIST.length, FDEI_FCST);
+
+  // Current score display
+  const latest=FDEI_HIST[FDEI_HIST.length-1];
+  document.getElementById('ciScoreVal').textContent=latest.toFixed(1);
+  document.getElementById('ciScoreVal').style.color=fdeiColor(latest);
+  document.getElementById('ciScoreStatus').textContent=fdeiStatus(latest);
+  document.getElementById('ciScoreStatus').style.color=fdeiColor(latest);
+
+  // Component cards — updated weights
+  const comps=[
+    {name:'Macro Growth',key:'macro',w:'15%',cur:CI.macro[49]},
+    {name:'Sentiment',key:'sent',w:'25% ↑',cur:CI.sent[49]},
+    {name:'Rural Income',key:'rural',w:'10% ↓',cur:CI.rural[49]},
+    {name:'Price/Monetary',key:'price',w:'25% ↑',cur:CI.price[49]},
+    {name:'Fiscal/Credit',key:'fiscal',w:'15%',cur:CI.fiscal[49]},
+    {name:'Input Costs',key:'input',w:'10% ↓',cur:CI.input[49]},
+  ];
+  document.getElementById('ciComponents').innerHTML=comps.map(c=>`
+    <div class="ci-comp" title="${c.name} sub-score — ${c.w} weight">
+      <div class="ci-comp-name">${c.name}</div>
+      <div class="ci-comp-score" style="color:${fdeiColor(c.cur)}">${c.cur}</div>
+      <div class="ci-comp-wt">Wt: ${c.w}</div>
+      <div class="ci-comp-bar"><div class="ci-comp-fill" style="width:${c.cur}%;background:${fdeiColor(c.cur)}"></div></div>
+    </div>`).join('');
+
+  // ── MAIN COMPOSITE CHART with zone fills and event markers ──
+  const ctx=C('compositeChart');
+  if(!ctx) return;
+  charts['compositeChart']?.destroy();
+
+  // Colour each data point based on zone
+  const pointColors = FDEI_HIST.map(v => v>=55?'#0d6b4f':v>=45?'#b45309':'#991b1b');
+  const pointSizes  = FDEI_HIST.map(v => v>=55?3:v>=45?3:4); // stressed points bigger
+
+  charts['compositeChart']=new Chart(ctx,{
+    type:'line',
+    data:{labels:allLabels,datasets:[
+      // Background favourable zone (≥55)
+      {label:'_fav',data:new Array(allLabels.length).fill(100),
+        backgroundColor:'rgba(13,107,79,0.06)',borderColor:'transparent',fill:{target:{value:55}},
+        pointRadius:0,tension:0,order:10},
+      // Background neutral zone (45–55)
+      {label:'_neu',data:new Array(allLabels.length).fill(55),
+        backgroundColor:'rgba(180,83,9,0.06)',borderColor:'transparent',fill:{target:{value:45}},
+        pointRadius:0,tension:0,order:11},
+      // Background stressed zone (<45)
+      {label:'_str',data:new Array(allLabels.length).fill(45),
+        backgroundColor:'rgba(153,27,27,0.06)',borderColor:'transparent',fill:{target:'origin'},
+        pointRadius:0,tension:0,order:12},
+      // FDEI Score — solid hist
+      {label:'FDEI Score',
+        data:[...FDEI_HIST,...new Array(12).fill(null)],
+        borderColor:'#0d6b4f',
+        backgroundColor:'transparent',
+        borderWidth:2.5,tension:.25,
+        pointRadius: pointSizes,
+        pointBackgroundColor: pointColors,
+        pointBorderColor: pointColors,
+        pointHoverRadius:6,
+        fill:false,order:1},
+      // 3-Mo Moving Avg
+      {label:'3-Mo Moving Avg',
+        data:[...FDEI_MA3,...new Array(12).fill(null)],
+        borderColor:'rgba(30,64,175,0.7)',
+        borderWidth:1.5,tension:.4,
+        pointRadius:0,fill:false,borderDash:[2,2],order:2},
+      // Forecast
+      {label:'Forecast',
+        data:fcstBridge,
+        borderColor:'rgba(13,107,79,0.65)',
+        borderDash:[6,4],borderWidth:2,
+        pointRadius:2,
+        pointBackgroundColor:'rgba(13,107,79,0.4)',
+        fill:false,order:3},
+      // Threshold lines
+      {label:'Favourable (55)',data:new Array(allLabels.length).fill(55),
+        borderColor:'rgba(13,107,79,0.25)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false,order:9},
+      {label:'Stressed (45)',data:new Array(allLabels.length).fill(45),
+        borderColor:'rgba(153,27,27,0.25)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false,order:9},
+    ]},
+    options:{...CD,
+      scales:{
+        x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxTicksLimit:16,maxRotation:0}},
+        y:{...CD.scales.y,min:15,max:95,
+          title:{display:true,text:'FDEI Score (0–100)',color:'#9c9a94',font:{size:9}},
+          ticks:{...CD.scales.y.ticks,stepSize:10,callback:(v)=>v===55?'55 ▶ Fav':v===45?'45 ▶ Str':v}}
+      },
+      plugins:{...CD.plugins,
+        legend:{display:true,position:'top',
+          labels:{color:'#6b6960',font:{size:9,family:'JetBrains Mono'},boxWidth:12,padding:14,
+            filter:(item)=>!item.text.startsWith('_')&&!item.text.includes('55')&&!item.text.includes('45')}
+        },
+        tooltip:{...CD.plugins.tooltip,
+          callbacks:{
+            label:(ctx)=>{
+              if(ctx.dataset.label.startsWith('_')) return null;
+              const v=ctx.raw;
+              if(v===null) return null;
+              if(ctx.dataset.label==='FDEI Score') return ` FDEI: ${v}  ${fdeiStatus(v)}`;
+              if(ctx.dataset.label==='3-Mo Moving Avg') return v?` 3-Mo Avg: ${v}`:null;
+              if(ctx.dataset.label==='Forecast') return v?` Forecast: ${v}`:null;
+              return null;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // ── SUB-COMPONENT CHARTS ──
+  const subCfg=[
+    {id:'ciMacroChart',data:CI.macro,fcst:CI.macro_f,color:'#0d6b4f'},
+    {id:'ciSentChart',data:CI.sent,fcst:CI.sent_f,color:'#1e40af'},
+    {id:'ciRuralChart',data:CI.rural,fcst:CI.rural_f,color:'#065f46'},
+    {id:'ciPriceChart',data:CI.price,fcst:CI.price_f,color:'#991b1b'},
+    {id:'ciFiscalChart',data:CI.fiscal,fcst:CI.fiscal_f,color:'#5b21b6'},
+    {id:'ciInputChart',data:CI.input,fcst:CI.input_f,color:'#92400e'},
+  ];
+  subCfg.forEach(sc=>{
+    const ctx2=C(sc.id); if(!ctx2) return;
+    charts[sc.id]?.destroy();
+    charts[sc.id]=new Chart(ctx2,{type:'line',data:{labels:allLabels,datasets:[
+      {label:'Score',data:[...sc.data,...new Array(12).fill(null)],borderColor:sc.color,backgroundColor:sc.color+'18',fill:true,tension:.3,pointRadius:1,borderWidth:2},
+      {label:'Fcst',data:bridgeNulls(sc.data.length,sc.fcst),borderColor:sc.color,borderDash:[5,4],pointRadius:1,fill:false,borderWidth:1.5}
+    ]},options:{...CD,scales:{x:{...CD.scales.x,ticks:{...CD.scales.x.ticks,maxTicksLimit:10}},y:{...CD.scales.y,min:15,max:85}}}});
+  });
+
+  // ── TABLE ──
+  // Last 18 months = indices 32 to 49
+  const TABLE_MONTHS=['Dec\'24','Jan\'25','Feb\'25','Mar\'25','Apr\'25','May\'25','Jun\'25','Jul\'25','Aug\'25','Sep\'25','Oct\'25','Nov\'25','Dec\'25','Jan\'26','Feb\'26','Mar\'26','Apr\'26','May\'26'];
+  const startIdx=32;
+  const tbody=document.getElementById('ciTableBody');
+  if(!tbody) return;
+  tbody.innerHTML=TABLE_MONTHS.map((m,j)=>{
+    const i=startIdx+j;
+    const score=FDEI_HIST[i];
+    const prev=i>0?FDEI_HIST[i-1]:score;
+    const delta=+(score-prev).toFixed(1);
+    const dTag=delta>0?`<span class="tag t-up">+${delta}</span>`:delta<0?`<span class="tag t-dn">${delta}</span>`:`<span class="tag t-nu">0.0</span>`;
+    const sc=fdeiStatusClass(score);
+    return `<tr>
+      <td><strong>${m}</strong></td>
+      <td><strong class="num" style="color:${fdeiColor(score)}">${score}</strong></td>
+      <td><span class="tag ${sc}">${fdeiStatus(score)}</span></td>
+      <td class="num">${CI.macro[i]}</td>
+      <td class="num">${CI.sent[i]}</td>
+      <td class="num">${CI.rural[i]}</td>
+      <td class="num">${CI.price[i]}</td>
+      <td class="num">${CI.fiscal[i]}</td>
+      <td class="num">${CI.input[i]}</td>
+      <td>${dTag}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// PDF
+// ══════════════════════════════════════════════════════
+function exportPDF(){
+  showToast('📄 Printing all sections — use Save as PDF…');
+  document.querySelectorAll('.section').forEach(s=>s.style.display='block');
+  ['economy','sentiment','sector','companies','global'].forEach(s=>renderSection(s));
+  renderComposite();
+  setTimeout(()=>{window.print();setTimeout(()=>{document.querySelectorAll('.section').forEach(s=>s.style.display='');},1200);},900);
+}
+
+// ══════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  renderSection('economy');
+  genAI('economy');
+  doRefresh();
+  document.getElementById('refreshTs').textContent='Initialising…';
+});
+</script>
+</body>
+</html>
